@@ -1,6 +1,6 @@
 #PATHS
 ifeq ($(PREFIX),)
-PREFIX=/usr/local/
+PREFIX= /cvmfs/icecube.opensciencegrid.org/py3-v4.2.1/RHEL_7_x86_64/
 endif
 
 CURRENT_DIR 	= $(shell pwd)
