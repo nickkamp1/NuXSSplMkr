@@ -42,6 +42,7 @@ int main(int argc, char* argv[]){
           double enu = pow(10, logenu);
           xs_obj.Set_Neutrino_Energy(enu*pc->GeV);
           double sigma = xs_obj.total();
+          std::cout << enu << "\t"<< sigma/cm2 << std::endl;
           outputfile_sigma << enu << "\t"<< sigma/cm2 << std::endl;
         }
         outputfile_sigma.close();
