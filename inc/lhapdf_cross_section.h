@@ -63,6 +63,8 @@ class LHAXS{
         double SigR_Nu_LO(double, double, map<int,double>);
         double SigR_Nu_LO_NC(double, double, map<int,double>);
         double SigR_Nu_LO_NC(double x, double y, map<int,LHAPDF::PDFUncertainty> dis, std::map<std::pair<int,int>,double> cov_m, int c);
+        double SigR_Nu_LO_EM(double, double, map<int,double>);
+        double SigR_Nu_LO_EM(double x, double y, map<int,LHAPDF::PDFUncertainty> dis, std::map<std::pair<int,int>,double> cov_m, int c);
         double Evaluate(double, double, double, int);
         double Evaluate(double, double, double);
         double EvaluateVar(double, double, double, int);
