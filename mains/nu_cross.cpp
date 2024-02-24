@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
   enum NeutrinoType {neutrino,antineutrino};
   enum PDFVar {central,minus,plus};
 
-  std::map<Current,std::string> IntTypeLabel {{CC,"cc"},{NC,"nc"}};
+  std::map<Current,std::string> IntTypeLabel {{CC,"cc"},{NC,"nc"},{EM,"em"}};
   std::map<NeutrinoType,double> CP_factor {{neutrino,1.},{antineutrino,-1}};
   //std::map<NeutrinoType,std::string> NeutrinoTypeLabel {{neutrino,"numu"},{antineutrino,"numubar"}};
   std::map<NeutrinoType,std::string> NeutrinoTypeLabel {{neutrino,"nutau"},{antineutrino,"nutaubar"}};
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
   double cm2 = SQ(pc->cm);
   double m2 = SQ(pc->meter);
 
-  for (Current IT : {CC,NC}) {
+  for (Current IT : {EM}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
     for (NeutrinoType neutype : {neutrino,antineutrino}){
