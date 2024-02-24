@@ -40,7 +40,7 @@ double HK(double x, void* param){
 
 class LHAXS{
     private:
-        double s_w,Lu2,Ld2,Ru2,Rd2;
+        double s_w,Lu2,Ld2,Ru2,Rd2,alpha;
         bool quiet = false;
     private:
         QCDOrder qcdorder;
@@ -59,8 +59,8 @@ class LHAXS{
         double CP_factor = std::numeric_limits<double>::max();
 
         //double SigR_Nu_LO(double, double, vector<LHAPDF::PDFUncertainty>, vector<vector<double>>, int);
-        double SigR_Nu_LO(double, double, map<int,LHAPDF::PDFUncertainty>, map<pair<int,int>,double>, int);
-        double SigR_Nu_LO(double, double, map<int,double>);
+        double SigR_Nu_LO_CC(double, double, map<int,LHAPDF::PDFUncertainty>, map<pair<int,int>,double>, int);
+        double SigR_Nu_LO_CC(double, double, map<int,double>);
         double SigR_Nu_LO_NC(double, double, map<int,double>);
         double SigR_Nu_LO_NC(double x, double y, map<int,LHAPDF::PDFUncertainty> dis, std::map<std::pair<int,int>,double> cov_m, int c);
         double SigR_Nu_LO_EM(double, double, map<int,double>);

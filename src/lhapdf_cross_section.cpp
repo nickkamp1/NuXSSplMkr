@@ -31,7 +31,9 @@ LHAXS::LHAXS(std::string PDFname){
     Ld2 = (-1. + (2./3.)*s_w) * (-1. + (2./3.)*s_w);
     Ru2 = (    - (4./3.)*s_w) * (    - (4./3.)*s_w);
     Rd2 = (      (2./3.)*s_w) * (      (2./3.)*s_w);
+    alpha = 1./129.; // Use value at Z pole
     if(not quiet){
+      std::cout << "alpha " << alpha << std::endl;
       std::cout << "sin(th_w) " << s_w << std::endl;
       std::cout << "Lu2 " << Lu2 << " Ld2 " << Ld2 << std::endl;
       std::cout << "Ru2 " << Ru2 << " Rd2 " << Rd2 << std::endl;
@@ -152,10 +154,7 @@ double LHAXS::SigR_Nu_LO_EM(double x, double y,
                             map<int,LHAPDF::PDFUncertainty> dis,
                             std::map<std::pair<int,int>,double> cov_m,
                             int c){
-  // using notation from https://arxiv.org/pdf/1102.0691.pdf
   double k = 0;
-	double q0 = 0.;
-	double q0bar = 0.;
 
   map<int,double> SigRcoef;
   SigRcoef[1]  =    -1./3.;
@@ -171,6 +170,10 @@ double LHAXS::SigR_Nu_LO_EM(double x, double y,
   SigRcoef[6]  =    2./3.;
   SigRcoef[-6] =    -2./3.;
   SigRcoef[21] =   0. ;
+
+  for (int p : partons) { 
+    SigRcoef[p] = std::pow(SigRcoef[p],2); 
+  }
 
 	// mean value
     switch (c){
@@ -237,7 +240,7 @@ double LHAXS::SigR_Nu_LO_EM(double x, double y,
 	return k;
 }
 
-double LHAXS::SigR_Nu_LO(double x, double y,
+double LHAXS::SigR_Nu_LO_CC(double x, double y,
                          map<int,LHAPDF::PDFUncertainty> dis,
                          std::map<std::pair<int,int>,double> cov_m, int c){
 	double k = 0.;
@@ -500,7 +503,33 @@ double LHAXS::SigR_Nu_LO_NC(double x,double y, map<int, double> xq_arr){
     return (q0*(1.-y)*(1.-y)+ q0bar);
 }
 
-double LHAXS::SigR_Nu_LO(double x, double y, map<int,double> xq_arr){
+double LHAXS::SigR_Nu_LO_EM(double x,double y, map<int, double> xq_arr){
+
+  double k = 0;
+
+  map<int,double> SigRcoef;
+  SigRcoef[1]  =    -1./3.;
+  SigRcoef[-1] =    1./3.;
+  SigRcoef[2]  =    2./3.;
+  SigRcoef[-2] =    -2./3.;
+  SigRcoef[3]  =    -1./3.;
+  SigRcoef[-3] =    1./3.;
+  SigRcoef[4]  =    2./3.;
+  SigRcoef[-4] =    -2./3.;
+  SigRcoef[5]  =    -1./3.;
+  SigRcoef[-5] =    1./3.;
+  SigRcoef[6]  =    2./3.;
+  SigRcoef[-6] =    -2./3.;
+  SigRcoef[21] =   0. ;
+
+  for( int p : partons ) {
+      k += std::pow(SigRcoef[p],2)*xq_arr[p];
+  }
+
+  return k;
+}
+
+double LHAXS::SigR_Nu_LO_CC(double x, double y, map<int,double> xq_arr){
 	double k = 0.;
 
   d_lepton = SQ(M_lepton)/(2.*M_iso*ENU);
@@ -558,9 +587,11 @@ double LHAXS::EvaluateVar(double Q2, double x, double y, int var){
     }
 
     if(INT_TYPE==CC)
-      return SigR_Nu_LO(x, y, xq_arr);
-    else
+      return SigR_Nu_LO_CC(x, y, xq_arr);
+    else if(INT_TYPE==NC)
       return SigR_Nu_LO_NC(x, y, xq_arr);
+    else if(INT_TYPE==EM)
+      return SigR_Nu_LO_EM(x, y, xq_arr);
 }
 
 double LHAXS::Evaluate(double Q2, double x, double y){
@@ -577,9 +608,11 @@ double LHAXS::Evaluate(double Q2, double x, double y){
     }
 
     if(INT_TYPE==CC)
-      return SigR_Nu_LO(x, y, xq_arr);
-    else
+      return SigR_Nu_LO_CC(x, y, xq_arr);
+    else if(INT_TYPE==NC)
       return SigR_Nu_LO_NC(x, y, xq_arr);
+    else if(INT_TYPE==EM)
+      return SigR_Nu_LO_EM(x, y, xq_arr);
 }
 
 double LHAXS::Evaluate(double Q2, double x, double y, int a){
@@ -720,9 +753,13 @@ double LHAXS::Evaluate(double Q2, double x, double y, int a){
   }
 
   if(INT_TYPE==CC)
-    return SigR_Nu_LO(x, y, xer_arr, cor_mat, a);
-  else
+    return SigR_Nu_LO_CC(x, y, xer_arr, cor_mat, a);
+  else if(INT_TYPE==NC)
     return SigR_Nu_LO_NC(x, y, xer_arr, cor_mat, a);
+  else if(INT_TYPE==EM)
+    return SigR_Nu_LO_EM(x, y, xer_arr, cor_mat, a);
+  else
+    return 0;
 }
 
 //==================================================================================
@@ -909,10 +946,17 @@ double LHAXS::KernelXS(double * k,int a){
   // if(Q2/SQ(pc->GeV) < 0.6){
   //     return 1.e-99;
   // }
-
-  // same for CC and NC
-  double denum    = SQ(1. + Q2/M_boson2);
-  double norm     = GF2*M_iso*ENU/(2.*M_PI*denum);
+  double norm, prefactor;
+  if(INT_TYPE==EM) {
+    norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
+    prefactor = (1.-y)/y;
+  }
+  else {
+    // same for CC and NC
+    double denum = SQ(1. + Q2/M_boson2);
+    norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+    prefactor = x*y;
+  }
 
   d_lepton = SQ(M_lepton)/(2.*M_iso*ENU);
 
@@ -926,7 +970,7 @@ double LHAXS::KernelXS(double * k,int a){
 
   // std::cout << "Using function: LHAXS::KernelXS(double * k,int a)" << std::endl;
   // std::cout << "a = " << a << std::endl;
-  return x*y*norm*Evaluate(Q2, x, y, a);
+  return prefactor*norm*Evaluate(Q2, x, y, a);
 }
 
 double LHAXS::KernelXSVar(double * k){
@@ -939,9 +983,17 @@ double LHAXS::KernelXSVar(double * k){
   //     return 1.e-99;
   // }
 
-  double denum    = SQ(1. + Q2/M_boson2);
-  double norm     = GF2*M_iso*ENU/(2.*M_PI*denum);
-  //std::cout << Evaluate(Q2, x, y, 0) << std::endl;
+  double norm, prefactor;
+  if(INT_TYPE==EM) {
+    norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
+    prefactor = (1.-y)/y;
+  }
+  else {
+    // same for CC and NC
+    double denum = SQ(1. + Q2/M_boson2);
+    norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+    prefactor = x*y;
+  }
 
   d_lepton = SQ(M_lepton)/(2.*M_iso*ENU);
 
@@ -954,9 +1006,9 @@ double LHAXS::KernelXSVar(double * k){
   }
 
   if(ivar==0)//central set
-    return x*y*norm*Evaluate(Q2, x, y);
+    return prefactor*norm*Evaluate(Q2, x, y);
   else
-    return x*y*norm*Evaluate(Q2, x, y, ivar);
+    return prefactor*norm*Evaluate(Q2, x, y, ivar);
 }
 
 double LHAXS::KernelXS(double * k){
@@ -974,8 +1026,17 @@ double LHAXS::KernelXS(double * k){
   //     return 1.e-99;
   // }
 
-  double denum    = SQ(1. + Q2/M_boson2);
-  double norm     = GF2*M_iso*ENU/(2.*M_PI*denum);
+  double norm, prefactor;
+  if(INT_TYPE==EM) {
+    norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
+    prefactor = (1.-y)/y;
+  }
+  else {
+    // same for CC and NC
+    double denum = SQ(1. + Q2/M_boson2);
+    norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+    prefactor = x*y;
+  }
 
   d_lepton = SQ(M_lepton)/(2.*M_iso*ENU);
 
@@ -990,7 +1051,7 @@ double LHAXS::KernelXS(double * k){
   // x*y is the jacobian
   // std::cout << "x*y*norm*Evaluate(Q2, x, y) = " << x*y*norm*Evaluate(Q2, x, y) << std::endl;
   // std::cout << "Using function: LHAXS::KernelXS(double * k)" << std::endl;
-  return x*y*norm*Evaluate(Q2, x, y);
+  return prefactor*norm*Evaluate(Q2, x, y);
 }
 
 double LHAXS::KernelXS_dsdyVar(double logx){
@@ -1003,13 +1064,22 @@ double LHAXS::KernelXS_dsdyVar(double logx){
     //     return 1.e-99;
     // }
 
-    double denum = SQ(1. + q2/M_boson2);
-    double norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+    double norm, prefactor;
+    if(INT_TYPE==EM) {
+      norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
+      prefactor = -1./(Y*Y);
+    }
+    else {
+      // same for CC and NC
+      double denum = SQ(1. + Q2/M_boson2);
+      norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+      prefactor = x;
+    }
 
   if(ivar==0)//central set
-    return x * norm * Evaluate(q2, x, Y);
+    return prefactor * norm * Evaluate(q2, x, Y);
   else
-    return x * norm * Evaluate(q2, x, Y, ivar);
+    return prefactor * norm * Evaluate(q2, x, Y, ivar);
 }
 
 double LHAXS::KernelXS_dsdy(double logx){
@@ -1022,10 +1092,19 @@ double LHAXS::KernelXS_dsdy(double logx){
     //     return 1.e-99;
     // }
 
-    double denum = SQ(1. + q2/M_boson2);
-    double norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+    double norm, prefactor;
+    if(INT_TYPE==EM) {
+      norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
+      prefactor = -1./(Y*Y);
+    }
+    else {
+      // same for CC and NC
+      double denum = SQ(1. + Q2/M_boson2);
+      norm = GF2*M_iso*ENU/(2.*M_PI*denum);
+      prefactor = x;
+    }
 
-    return x * norm * Evaluate (q2, x, Y);
+    return prefactor * norm * Evaluate (q2, x, Y);
 }
 
 // THIS FUNCTIONS RETURN THE DIFFERENTIAL CROSS SECTION
