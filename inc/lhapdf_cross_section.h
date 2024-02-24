@@ -18,7 +18,7 @@
 #include <map>
 
 enum QCDOrder {LO,NLO,NNLO};
-enum Current {CC,NC};
+enum Current {CC,NC,EM};
 
 template<class T,double (T::*f)(double*)>
 double KernelHelper(double* x,size_t dim, void* param){

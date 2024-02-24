@@ -51,35 +51,126 @@ double LHAXS::SigR_Nu_LO_NC(double x, double y,
 
   map<int,double> SigRcoef;
   if (CP_factor > 0 ){
-    SigRcoef[1]  =    0.5*(Lu2 + Ld2) + 0.5*(Ru2 + Rd2)*(1. - y)*(1. - y);
-    SigRcoef[-1] =    0.5*(Ru2 + Rd2) + 0.5*(Lu2 + Ld2)*(1. - y)*(1. - y);
-    SigRcoef[2]  =    0.5*(Lu2 + Ld2) + 0.5*(Ru2 + Rd2)*(1. - y)*(1. - y);
-    SigRcoef[-2] =    0.5*(Ru2 + Rd2) + 0.5*(Lu2 + Ld2)*(1. - y)*(1. - y);
-    SigRcoef[3]  =    (Ld2 + Rd2) + (Ld2 + Rd2)*(1. - y)*(1. - y);
-    SigRcoef[-3] =    0.;
-    SigRcoef[4]  =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
-    SigRcoef[-4] =    0.;
-    SigRcoef[5]  =    (Ld2 + Rd2) + (Ld2 + Rd2)*(1. - y)*(1. - y);
-    SigRcoef[-5] =    0.;
-    //SigRcoef[6]  =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
-    //SigRcoef[-6] =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
-    SigRcoef[21] =   0. ;
-  } else {
-    //fixes for antineutrinos
-    SigRcoef[1]  =    0.5*(Lu2 + Ld2)*(1. - y)*(1. - y) + 0.5*(Ru2 + Rd2);
-    SigRcoef[-1] =    0.5*(Ru2 + Rd2)*(1. - y)*(1. - y) + 0.5*(Lu2 + Ld2);
-    SigRcoef[2]  =    0.5*(Lu2 + Ld2)*(1. - y)*(1. - y)+ 0.5*(Ru2 + Rd2);
-    SigRcoef[-2] =    0.5*(Ru2 + Rd2)*(1. - y)*(1. - y)+ 0.5*(Lu2 + Ld2);
-    SigRcoef[3]  =    (Ld2 + Rd2)*(1. - y)*(1. - y)+ (Ld2 + Rd2);
-    SigRcoef[-3] =    0.;
-    SigRcoef[4]  =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
-    SigRcoef[-4] =    0.;
-    SigRcoef[5]  =    (Ld2 + Rd2)*(1. - y)*(1. - y) + (Ld2 + Rd2);
-    SigRcoef[-5] =    0.;
-    //SigRcoef[6]  =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
-    //SigRcoef[-6] =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
-    SigRcoef[21] =   0. ;
+  SigRcoef[1]  =    0.5*(Lu2 + Ld2) + 0.5*(Ru2 + Rd2)*(1. - y)*(1. - y);
+  SigRcoef[-1] =    0.5*(Ru2 + Rd2) + 0.5*(Lu2 + Ld2)*(1. - y)*(1. - y);
+  SigRcoef[2]  =    0.5*(Lu2 + Ld2) + 0.5*(Ru2 + Rd2)*(1. - y)*(1. - y);
+  SigRcoef[-2] =    0.5*(Ru2 + Rd2) + 0.5*(Lu2 + Ld2)*(1. - y)*(1. - y);
+  SigRcoef[3]  =    (Ld2 + Rd2) + (Ld2 + Rd2)*(1. - y)*(1. - y);
+  SigRcoef[-3] =    0.;
+  SigRcoef[4]  =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
+  SigRcoef[-4] =    0.;
+  SigRcoef[5]  =    (Ld2 + Rd2) + (Ld2 + Rd2)*(1. - y)*(1. - y);
+  SigRcoef[-5] =    0.;
+  //SigRcoef[6]  =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
+  //SigRcoef[-6] =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
+  SigRcoef[21] =   0. ;
+  } 
+  else {
+  //fixes for antineutrinos
+  SigRcoef[1]  =    0.5*(Lu2 + Ld2)*(1. - y)*(1. - y) + 0.5*(Ru2 + Rd2);
+  SigRcoef[-1] =    0.5*(Ru2 + Rd2)*(1. - y)*(1. - y) + 0.5*(Lu2 + Ld2);
+  SigRcoef[2]  =    0.5*(Lu2 + Ld2)*(1. - y)*(1. - y)+ 0.5*(Ru2 + Rd2);
+  SigRcoef[-2] =    0.5*(Ru2 + Rd2)*(1. - y)*(1. - y)+ 0.5*(Lu2 + Ld2);
+  SigRcoef[3]  =    (Ld2 + Rd2)*(1. - y)*(1. - y)+ (Ld2 + Rd2);
+  SigRcoef[-3] =    0.;
+  SigRcoef[4]  =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
+  SigRcoef[-4] =    0.;
+  SigRcoef[5]  =    (Ld2 + Rd2)*(1. - y)*(1. - y) + (Ld2 + Rd2);
+  SigRcoef[-5] =    0.;
+  //SigRcoef[6]  =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
+  //SigRcoef[-6] =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
+  SigRcoef[21] =   0. ;
   }
+  
+
+	// mean value
+    switch (c){
+        case 0:
+            for( int p : partons ) {
+                k += SigRcoef[p]*dis[p].central;
+                //std::cout << "p_pdf " << p << " " << dis[p].central << std::endl;
+            }
+            //std::cout << k << std::endl;
+            break;
+
+	// upper error
+        case 1:
+	        for( int p : partons ) {
+	        	k += SQ(SigRcoef[p]*dis[p].errplus);
+	        	for( int u : partons ) {
+	        		if (dis[p].errplus*dis[u].errplus > 0.){
+	        			k += ((SigRcoef[p]*SigRcoef[u])*
+	        				(dis[p].errplus*dis[u].errplus)*
+	        				cov_m[{p,u}]);
+	        		}
+	        	}
+	        }
+	        k = (1.0)*sqrt(k);
+          for( int p : partons ) {
+              k += SigRcoef[p]*dis[p].central;
+          }
+          break;
+
+	// lower error
+        case -1:
+	        for( int p : partons ) {
+	        	k += SQ(SigRcoef[p]*dis[p].errminus);
+	        	for( int u : partons ) {
+	        		if (dis[p].errminus*dis[u].errminus > 0.){
+	        			k += ((SigRcoef[p]*SigRcoef[u])*
+	        				(dis[p].errminus*dis[u].errminus)*
+	        				cov_m[{p,u}]);
+	        		}
+	        	}
+	        }
+	        k = (-1.0)*sqrt(k);
+          for( int p : partons ) {
+              k += SigRcoef[p]*dis[p].central;
+          }
+          break;
+
+    // symmetric
+        case 9:
+	        for( int p : partons ) {
+	        	k += SQ(SigRcoef[p]*dis[p].errsymm);
+	        	for( int u : partons ) {
+	        		if (dis[p].errsymm*dis[u].errsymm > 0.){
+	        			k += ((SigRcoef[p]*SigRcoef[u])*
+	        				(dis[p].errsymm*dis[u].errsymm)*
+	        				cov_m[{p,u}]);
+	        		}
+	        	}
+	        }	
+	        k = sqrt(k);
+            break;
+    }
+
+	return k;
+}
+
+double LHAXS::SigR_Nu_LO_EM(double x, double y,
+                            map<int,LHAPDF::PDFUncertainty> dis,
+                            std::map<std::pair<int,int>,double> cov_m,
+                            int c){
+  // using notation from https://arxiv.org/pdf/1102.0691.pdf
+  double k = 0;
+	double q0 = 0.;
+	double q0bar = 0.;
+
+  map<int,double> SigRcoef;
+  SigRcoef[1]  =    -1./3.;
+  SigRcoef[-1] =    1./3.;
+  SigRcoef[2]  =    2./3.;
+  SigRcoef[-2] =    -2./3.;
+  SigRcoef[3]  =    -1./3.;
+  SigRcoef[-3] =    1./3.;
+  SigRcoef[4]  =    2./3.;
+  SigRcoef[-4] =    -2./3.;
+  SigRcoef[5]  =    -1./3.;
+  SigRcoef[-5] =    1./3.;
+  SigRcoef[6]  =    2./3.;
+  SigRcoef[-6] =    -2./3.;
+  SigRcoef[21] =   0. ;
 
 	// mean value
     switch (c){
@@ -163,17 +254,17 @@ double LHAXS::SigR_Nu_LO(double x, double y,
   //std::cout << "a " << a << " b " << b << std::endl;
 
   map<int,double> SigRcoef;
-	SigRcoef[1]  =    a ;
-	SigRcoef[-1] =    b ;
-	SigRcoef[2]  =    a ;
-	SigRcoef[-2] =    b ;
-	SigRcoef[3]  = 2.*a ;
-	SigRcoef[-3] =   0. ;
-	SigRcoef[4]  =   0. ;
-	SigRcoef[-4] = 2.*b ;
-	SigRcoef[5]  = 2.*a ;
-	SigRcoef[-5] =   0. ;
-	SigRcoef[21] =   0. ;
+  SigRcoef[1]  =    a ;
+  SigRcoef[-1] =    b ;
+  SigRcoef[2]  =    a ;
+  SigRcoef[-2] =    b ;
+  SigRcoef[3]  = 2.*a ;
+  SigRcoef[-3] =   0. ;
+  SigRcoef[4]  =   0. ;
+  SigRcoef[-4] = 2.*b ;
+  SigRcoef[5]  = 2.*a ;
+  SigRcoef[-5] =   0. ;
+  SigRcoef[21] =   0. ;
 
   if (CP_factor < 0 ){
     //fixes for antineutrinos
