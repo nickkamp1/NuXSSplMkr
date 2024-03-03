@@ -61,17 +61,17 @@ int main(int argc, char* argv[]){
         std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
 
         std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
-        std::cout << "Total filename: " << filename_total << std::endl;
+        std::cout << "Total filename: " << filename_sigma << std::endl;
 
 
         ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
-        ofstream outputfile_total(filename_dsdxdy.c_str());
+        ofstream outputfile_sigma(filename_dsdxdy.c_str());
 
         for (double logenu=0.;logenu<=5.;logenu+=0.05){
           double enu = pow(10, logenu);
           xs_obj.Set_Neutrino_Energy(enu*pc->GeV);
           double sigma = xs_obj.total();
-          outputfile_total << enu << "\t" << sigma/cm2 << std::endl;
+          outputfile_sigma << enu << "\t" << sigma/cm2 << std::endl;
           for (double logx=-5.;logx<0.;logx+=0.025){
             double x = pow(10, logx);
             for (double logy=-5.;logy<0.;logy+=0.025){
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]){
         }
 
         outputfile_dsdxdy.close();
-        outputfile_total.close();
+        outputfile_sigma.close();
       }
     }
   }
