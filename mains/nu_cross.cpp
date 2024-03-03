@@ -65,7 +65,7 @@ int main(int argc, char* argv[]){
 
 
         ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
-        ofstream outputfile_sigma(filename_dsdxdy.c_str());
+        ofstream outputfile_sigma(filename_sigma.c_str());
 
         for (double logenu=0.;logenu<=5.;logenu+=0.05){
           double enu = pow(10, logenu);
