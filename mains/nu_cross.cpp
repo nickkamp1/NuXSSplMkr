@@ -24,8 +24,8 @@ int main(int argc, char* argv[]){
 
   std::map<Current,std::string> IntTypeLabel {{CC,"cc"},{NC,"nc"},{EM,"em"}};
   std::map<NeutrinoType,double> CP_factor {{neutrino,1.},{antineutrino,-1}};
-  //std::map<NeutrinoType,std::string> NeutrinoTypeLabel {{neutrino,"numu"},{antineutrino,"numubar"}};
-  std::map<NeutrinoType,std::string> NeutrinoTypeLabel {{neutrino,"nutau"},{antineutrino,"nutaubar"}};
+  std::map<NeutrinoType,std::string> NeutrinoTypeLabel {{neutrino,"numu"},{antineutrino,"numubar"}};
+  //std::map<NeutrinoType,std::string> NeutrinoTypeLabel {{neutrino,"nutau"},{antineutrino,"nutaubar"}};
   std::map<PDFVar,int> PDFVarIndex {{central,0},{minus,-1},{plus,1}};
   std::map<PDFVar,std::string> PDFVarLabel {{central,"central"},{minus,"minus"},{plus,"plus"}};
 
@@ -58,14 +58,19 @@ int main(int argc, char* argv[]){
       xs_obj.Set_CP_factor(CP_factor[neutype]);
       for (PDFVar pdfvar : {central}){
         std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
+        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
 
-        std::cout << "Filename: " << filename_dsdxdy << std::endl;
+        std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
+        std::cout << "Total filename: " << filename_total << std::endl;
+
 
         ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
+        ofstream outputfile_total(filename_dsdxdy.c_str());
 
-        for (double logenu=0.;logenu<=4.;logenu+=0.05){
+        for (double logenu=0.;logenu<=5.;logenu+=0.05){
           double enu = pow(10, logenu);
           xs_obj.Set_Neutrino_Energy(enu*pc->GeV);
+          outputfile_total << enu << "\t" << sigma/cm2 << std::endl;
           for (double logx=-5.;logx<0.;logx+=0.025){
             double x = pow(10, logx);
             for (double logy=-5.;logy<0.;logy+=0.025){
@@ -76,13 +81,14 @@ int main(int argc, char* argv[]){
 
                 //double dsigdxdy = xs_obj.KernelXS(zz,PDFVarIndex[pdfvar])/cm2;
                 // double dsigdxdy = xs_obj.KernelXS(zz,PDFVarIndex[pdfvar])/m2;
-                double dsigdxdy = xs_obj.KernelXS(zz)/m2;
+                double dsigdxdy = xs_obj.KernelXS(zz)/cm2;
                 outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
             }
           }
         }
 
         outputfile_dsdxdy.close();
+        outputfile_total.close();
       }
     }
   }
