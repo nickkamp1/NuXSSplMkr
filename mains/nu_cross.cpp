@@ -70,6 +70,7 @@ int main(int argc, char* argv[]){
         for (double logenu=0.;logenu<=5.;logenu+=0.05){
           double enu = pow(10, logenu);
           xs_obj.Set_Neutrino_Energy(enu*pc->GeV);
+          double sigma = xs_obj.total();
           outputfile_total << enu << "\t" << sigma/cm2 << std::endl;
           for (double logx=-5.;logx<0.;logx+=0.025){
             double x = pow(10, logx);
