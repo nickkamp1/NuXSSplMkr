@@ -217,7 +217,7 @@ if __name__ == "__main__":
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL/"
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL_test/"
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL_modified/"
-    inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL_SUM/"
+    inpath_base = "/data/user/nkamp/LeptonInjectorV2/sources/NuXSSplMkr/bin/"
 
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/tau/"
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/tau_modified/"
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     neutrino_type = ['nutau','nutaubar']
 
     # pdf_list = ['HERAPDF15NLO_EIG_central']
-    pdf_list = ['GRV98lo_patched_central']
+    pdf_list = ['PDF4LHC21_mc_central']
 
     for inpath in inpaths:
         print('This input directory:\n',inpath)
@@ -262,7 +262,7 @@ if __name__ == "__main__":
         #             SplineFitMaker1D(infilepath, outname = filename + ".fits",
         #                     scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
-        for int_type in ["cc","nc"]:
+        for int_type in ["em"]:
             for pdf in pdf_list:
                 for neutype in neutrino_type:
                     filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
