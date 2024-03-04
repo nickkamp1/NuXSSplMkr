@@ -1,3 +1,6 @@
+#!/bin/sh /cvmfs/icecube.opensciencegrid.org/py3-v4.2.1/icetray-start
+#METAPROJECT metaproject/v1.9.2
+
 import numpy
 import operator
 import re
