@@ -67,13 +67,13 @@ def SplineFitMaker1D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     z = of(datas[:,column])
 
     knots = [numpy.linspace(x.min()-1,x.max()+1,N,endpoint = True)]
-    order = 2
-    smooth = 1.0e-15
-    # penaltyorder = 2
+    order = [2]
+    smooth = [1.0e-15]
+    penaltyorder = [2]
 
     weight = numpy.ones(z.shape)
     zs,w = ndsparse.from_data(z,weight)
-    result = glam_fit(z,weight,[x],knots,order,smooth)
+    result = glam_fit(zs,w,[x],knots,order,smooth,penaltyorder)
 
     # creatiing new filename and saving
     if outname == "":
@@ -114,7 +114,7 @@ def SplineFitMaker2D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
         exit()
 
     shape = tuple(numpy.unique(datas[:,i]).size for i in range(2))
-    datas = datas.reshape(shape + (datas.size/reduce(operator.mul,shape),))
+    datas = datas.reshape(shape + (int(datas.size/reduce(operator.mul,shape)),))
 
     x = f(datas[:,0,0])
     y = f(datas[0,:,1])
@@ -122,15 +122,15 @@ def SplineFitMaker2D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
 
     knots = [numpy.linspace(x.min()-1,x.max()+1,N,endpoint = True),numpy.linspace(y.min()-1,y.max()+1,N,endpoint = True)]
     #knots = [x,y]
-    order = 2
+    order = [2 for _ in range(2)]
     #smooth = 1.0e-5
-    smooth = 1.0e-15
-    # penaltyorder = 2
+    smooth = [1.0e-15 for _ in range(2)]
+    penaltyorder = [2 for _ in range(2)]
 
     weight = numpy.ones(z.shape)
     #weight = 1+zz
-    zs, w = ndsparse.from_data(z,weight)
-    result = glam_fit(zs,w,[x,y],knots,order,smooth)
+    zs,w = ndsparse.from_data(z,weight)
+    result = glam_fit(zs,w,[x,y],knots,order,smooth,penaltyorder)
 
     # creatiing new filename and saving
     if outname == "":
@@ -180,7 +180,7 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
         exit()
 
     shape = tuple(numpy.unique(datas[:,i]).size for i in range(3))
-    datas = datas.reshape(shape + (datas.size/reduce(operator.mul,shape),))
+    datas = datas.reshape(shape + (int(datas.size/reduce(operator.mul,shape)),))
 
     x = f(datas[:,0,0,0])
     y = f(datas[0,:,0,1])
@@ -191,15 +191,15 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
              numpy.linspace(y.min()-1,y.max()+1,N,endpoint = True),
              numpy.linspace(w.min()-1,w.max()+1,N,endpoint = True)]
     #knots = [x,y]
-    order = 2
+    order = [2 for _ in range(3)]
     #smooth = 1.0e-5
-    smooth = 1.0e-15
-    # penaltyorder = 2
+    smooth = [1.0e-15 for _ in range(3)]
+    penaltyorder = [2 for _ in range(3)]
 
     weight = numpy.ones(z.shape)
     #weight = 1+zz
     zs,w = ndsparse.from_data(z,weight)
-    result = glam_fit(zs,w,[x,y,w],knots,order,smooth)
+    result = glam_fit(zs,w,[x,y,w],knots,order,smooth,penaltyorder)
 
     # creatiing new filename and saving
     if outname == "":
@@ -266,22 +266,24 @@ if __name__ == "__main__":
         for int_type in ["em"]:
             for pdf in pdf_list:
                 for neutype in neutrino_type:
-                    # differential
-                    filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
-                    print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + ".dat"
-                    if not os.path.isfile(infilepath):continue
-                    print('Infilepath: {}'.format(infilepath))
-                    SplineFitMaker3D(infilepath, outname = filename + ".fits",
-                            scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log')
-                    # total
-                    filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
-                    print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + ".dat"
-                    if not os.path.isfile(infilepath):continue
-                    print('Infilepath: {}'.format(infilepath))
-                    SplineFitMaker1D(infilepath, outname = filename + ".fits",
-                            scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
+                    
+                  # total
+                  filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
+                  print("processing: "+filename)
+                  infilepath = inpath + '/' + filename + ".dat"
+                  if not os.path.isfile(infilepath):continue
+                  print('Infilepath: {}'.format(infilepath))
+                  SplineFitMaker1D(infilepath, outname = filename + ".fits",
+                          scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
+                  
+                  # differential
+                  filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
+                  print("processing: "+filename)
+                  infilepath = inpath + '/' + filename + ".dat"
+                  if not os.path.isfile(infilepath):continue
+                  print('Infilepath: {}'.format(infilepath))
+                  SplineFitMaker3D(infilepath, outname = filename + ".fits",
+                          scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log')
 
 #     #### Start - Original code (carguelles) ####
 
