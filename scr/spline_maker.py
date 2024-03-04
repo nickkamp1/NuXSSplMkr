@@ -1,6 +1,3 @@
-#!/bin/sh /cvmfs/icecube.opensciencegrid.org/py3-v4.2.1/icetray-start
-#METAPROJECT metaproject/v1.9.2
-
 import numpy
 import operator
 import re
@@ -9,8 +6,7 @@ import warnings
 from glob import glob
 
 # Fast sparse-matrix implementation
-from icecube.photospline import spglam as glam
-from icecube.photospline import splinefitstable
+from photospline import glam_fit,ndsparse
 
 import os
 
@@ -77,7 +73,8 @@ def SplineFitMaker1D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     # penaltyorder = 2
 
     weight = numpy.ones(z.shape)
-    result = glam.fit(z,weight,[x],knots,order,smooth)
+    zs,w = ndsparse.from_data(z,weight)
+    result = glam_fit(z,weight,[x],knots,order,smooth)
 
     # creatiing new filename and saving
     if outname == "":
@@ -88,7 +85,7 @@ def SplineFitMaker1D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     if os.path.exists(prefix+nfilename):
         os.unlink(prefix+nfilename)
     # this file can later be loaded and evaluated with the photospline C library
-    splinefitstable.write(result, prefix+nfilename)
+    result.write(prefix+nfilename)
     print("Done. Generated :"  + prefix+nfilename)
 
 def SplineFitMaker2D(filename, scale = 'lin', prefix = '', skip_header = 0, column = 2, N = 50, outname = ""):
@@ -133,7 +130,8 @@ def SplineFitMaker2D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
 
     weight = numpy.ones(z.shape)
     #weight = 1+zz
-    result = glam.fit(z,weight,[x,y],knots,order,smooth)
+    zs, w = ndsparse.from_data(z,weight)
+    result = glam_fit(zs,w,[x,y],knots,order,smooth)
 
     # creatiing new filename and saving
     if outname == "":
@@ -144,7 +142,7 @@ def SplineFitMaker2D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     if os.path.exists(prefix+nfilename):
         os.unlink(prefix+nfilename)
     # this file can later be loaded and evaluated with the photospline C library
-    splinefitstable.write(result, prefix+nfilename)
+    result.write(prefix+nfilename)
     print("Done. Generated :"  + prefix+nfilename)
 
 def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, column = 2, N = 50, outname = "", oscale = 'lin'):
@@ -201,7 +199,8 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
 
     weight = numpy.ones(z.shape)
     #weight = 1+zz
-    result = glam.fit(z,weight,[x,y,w],knots,order,smooth)
+    zs,w = ndsparse.from_data(z,weight)
+    result = glam_fit(zs,w,[x,y,w],knots,order,smooth)
 
     # creatiing new filename and saving
     if outname == "":
@@ -212,7 +211,7 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     if os.path.exists(prefix+nfilename):
         os.unlink(prefix+nfilename)
     # this file can later be loaded and evaluated with the photospline C library
-    splinefitstable.write(result, prefix+nfilename)
+    result.write(prefix+nfilename)
     print("Done. Generated :"  + prefix+nfilename)
 
 if __name__ == "__main__":
@@ -243,8 +242,8 @@ if __name__ == "__main__":
 
     print('All input directories:\n', inpaths)
 
-    # neutrino_type = ['numu','numubar']
-    neutrino_type = ['nutau','nutaubar']
+    neutrino_type = ['numu','numubar']
+    # neutrino_type = ['nutau','nutaubar']
 
     # pdf_list = ['HERAPDF15NLO_EIG_central']
     pdf_list = ['PDF4LHC21_mc_central']
@@ -268,6 +267,7 @@ if __name__ == "__main__":
         for int_type in ["em"]:
             for pdf in pdf_list:
                 for neutype in neutrino_type:
+                    # differential
                     filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
                     print("processing: "+filename)
                     infilepath = inpath + '/' + filename + ".dat"
@@ -275,6 +275,14 @@ if __name__ == "__main__":
                     print('Infilepath: {}'.format(infilepath))
                     SplineFitMaker3D(infilepath, outname = filename + ".fits",
                             scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log')
+                    # total
+                    filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
+                    print("processing: "+filename)
+                    infilepath = inpath + '/' + filename + ".dat"
+                    if not os.path.isfile(infilepath):continue
+                    print('Infilepath: {}'.format(infilepath))
+                    SplineFitMaker1D(infilepath, outname = filename + ".fits",
+                            scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
 #     #### Start - Original code (carguelles) ####
 
