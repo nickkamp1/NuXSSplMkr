@@ -1,7 +1,6 @@
 import numpy
 import operator
-import re
-import warnings
+from functools import reduce
 
 from glob import glob
 
