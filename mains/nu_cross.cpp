@@ -70,8 +70,8 @@ int main(int argc, char* argv[]){
         for (double logenu=0.;logenu<=5.;logenu+=0.05){
           double enu = pow(10, logenu);
           xs_obj.Set_Neutrino_Energy(enu*pc->GeV);
-          // double sigma = xs_obj.total();
-          // outputfile_sigma << enu << "\t" << sigma << std::endl;
+          double sigma = xs_obj.total();
+          outputfile_sigma << enu << "\t" << sigma << std::endl;
           for (double logx=-5.;logx<0.;logx+=0.025){
             double x = pow(10, logx);
             for (double logy=-5.;logy<0.;logy+=0.025){
@@ -83,7 +83,6 @@ int main(int argc, char* argv[]){
                 //double dsigdxdy = xs_obj.KernelXS(zz,PDFVarIndex[pdfvar])/cm2;
                 // double dsigdxdy = xs_obj.KernelXS(zz,PDFVarIndex[pdfvar])/m2;
                 double dsigdxdy = xs_obj.KernelXS(zz);
-                std::cout << x << " " << y << " " << dsigdxdy << std::endl;
                 outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
             }
           }

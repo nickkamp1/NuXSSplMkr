@@ -73,7 +73,7 @@ class LHAXS{
 
         double ENU = -1;
         bool ienu = false;
-        bool INT_TYPE;
+        int INT_TYPE;
         bool IS_HNL = false;
         double Mw2,Mz2, M_iso, GF2;
         double M_boson2;

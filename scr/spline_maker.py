@@ -229,10 +229,10 @@ if __name__ == "__main__":
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/tau_modified_6/"
 
     # # take all masses
-    inpaths = glob(os.path.join(inpath_base, 'M_*'))
+    # inpaths = glob(os.path.join(inpath_base, 'M_*'))
     # only a specific mass
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
-    # inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
+    inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0200MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0300MeV')]
