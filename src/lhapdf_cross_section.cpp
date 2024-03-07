@@ -524,6 +524,7 @@ double LHAXS::SigR_Nu_LO_EM(double x,double y, map<int, double> xq_arr){
 
   for( int p : partons ) {
       k += std::pow(SigRcoef[p],2)*xq_arr[p];
+      std:: cout << p << SigRcoef[p] << xq_arr[p] << std::endl;
   }
 
   return k;
@@ -605,6 +606,7 @@ double LHAXS::Evaluate(double Q2, double x, double y){
     map<int,double> xq_arr;
     for ( int p : partons ){
       xq_arr[p] = grid_central -> xfxQ(p,x,q);
+      std::cout << p << " " << xq_arr[p] << std::endl;
     }
 
     if(INT_TYPE==CC)
@@ -1030,6 +1032,7 @@ double LHAXS::KernelXS(double * k){
   if(INT_TYPE==EM) {
     norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
     prefactor = (1.-y)/y;
+    std::cout << "norm/prefactor: " << norm << "/" << prefactor << std::endl;
   }
   else {
     // same for CC and NC
