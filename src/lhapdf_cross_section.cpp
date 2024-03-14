@@ -1047,6 +1047,15 @@ double LHAXS::KernelXS(double * k){
         return 0.;
     }
   }
+  if(IS_HNL==true && INT_TYPE==EM) { // eq 5 of 1707.08573
+    double Q2 = 2*M_iso*ENU*x*y;
+    double W2 = M_iso*M_iso + Q2/x * (1-x);
+    double Er = ENU*y;
+    double term = M_lepton*M_lepton - W2 - 2*x*ENU*M_iso - x*x*M_iso*M_iso + 2*Er*(x*M_so + ENU);
+    if *Er*Er - W2 - term*term/(4*ENU*ENU) <= 0) { // equation 5
+      return 0;
+    }
+  }
 
   // x*y is the jacobian
   // std::cout << "x*y*norm*Evaluate(Q2, x, y) = " << x*y*norm*Evaluate(Q2, x, y) << std::endl;
