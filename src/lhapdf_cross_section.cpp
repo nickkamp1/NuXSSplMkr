@@ -1051,8 +1051,8 @@ double LHAXS::KernelXS(double * k){
     double Q2 = 2*M_iso*ENU*x*y;
     double W2 = M_iso*M_iso + Q2/x * (1-x);
     double Er = ENU*y;
-    double term = M_lepton*M_lepton - W2 - 2*x*ENU*M_iso - x*x*M_iso*M_iso + 2*Er*(x*M_so + ENU);
-    if *Er*Er - W2 - term*term/(4*ENU*ENU) <= 0) { // equation 5
+    double term = M_lepton*M_lepton - W2 - 2*x*ENU*M_iso - x*x*M_iso*M_iso + 2*Er*(x*M_iso + ENU);
+    if (Er*Er - W2 - term*term/(4*ENU*ENU) <= 0) { // equation 5
       return 0;
     }
   }
