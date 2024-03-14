@@ -198,8 +198,8 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
 
     weight = numpy.ones(z.shape)
     #weight = 1+zz
-    zs,w = ndsparse.from_data(z,weight)
-    result = glam_fit(zs,w,[x,y,w],knots,order,smooth,penaltyorder)
+    zs,weight = ndsparse.from_data(z,weight)
+    result = glam_fit(zs,weight,[x,y,w],knots,order,smooth,penaltyorder)
 
     # creatiing new filename and saving
     if outname == "":
@@ -232,16 +232,17 @@ if __name__ == "__main__":
     # inpaths = glob(os.path.join(inpath_base, 'M_*'))
     # only a specific mass
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
-    inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
+    # inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0200MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
-    # inpaths = [os.path.join(inpath_base, 'M_0300MeV')]
+    inpaths = [os.path.join(inpath_base, 'M_0300MeV'),
+               os.path.join(inpath_base, 'M_0400MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_1777MeV')]
 
 
     print('All input directories:\n', inpaths)
 
-    neutrino_type = ['numu','numubar']
+    neutrino_type = ['nu']
     # neutrino_type = ['nutau','nutaubar']
 
     # pdf_list = ['HERAPDF15NLO_EIG_central']
