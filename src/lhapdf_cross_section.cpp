@@ -179,7 +179,7 @@ double LHAXS::SigR_Nu_LO_EM(double x, double y,
     switch (c){
         case 0:
             for( int p : partons ) {
-                k += SigRcoef[p]*dis[p].central;
+                k += SigRcoef[p]*dis[p].central/x;
                 //std::cout << "p_pdf " << p << " " << dis[p].central << std::endl;
             }
             //std::cout << k << std::endl;
@@ -523,7 +523,7 @@ double LHAXS::SigR_Nu_LO_EM(double x,double y, map<int, double> xq_arr){
   SigRcoef[21] =   0. ;
 
   for( int p : partons ) {
-      k += std::pow(SigRcoef[p],2)*xq_arr[p];
+      k += std::pow(SigRcoef[p],2)*xq_arr[p]/x;
   }
 
   return k;
