@@ -144,7 +144,7 @@ def SplineFitMaker2D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     result.write(prefix+nfilename)
     print("Done. Generated :"  + prefix+nfilename)
 
-def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, column = 2, N = 50, outname = "", oscale = 'lin'):
+def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, column = 2, N = 50, outname = "", oscale = 'lin', smooth=1e-15):
     """
     Creates a spline table from a table of numbers. Then
     saves the table using the sanem filename as given.
@@ -193,7 +193,7 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     #knots = [x,y]
     order = [2 for _ in range(3)]
     #smooth = 1.0e-5
-    smooth = [1.0e-15 for _ in range(3)]
+    smooth = [smooth for _ in range(3)]
     penaltyorder = [2 for _ in range(3)]
 
     weight = numpy.ones(z.shape)
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL/"
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL_test/"
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/HNL_modified/"
-    inpath_base = "/data/user/nkamp/LeptonInjectorV2/sources/NuXSSplMkr/bin/"
+    inpath_base = "/n/holylfs05/LABS/arguelles_delgado_lab/Everyone/nkamp/LIV2/sources/NuXSSplMkr/bin"
 
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/tau/"
     # inpath_base = "/data/user/lfischer/software/NuXSSplMkr/data/tau_modified/"
@@ -231,9 +231,9 @@ if __name__ == "__main__":
     # # take all masses
     # inpaths = glob(os.path.join(inpath_base, 'M_*'))
     # only a specific mass
-    inpaths = [os.path.join(inpath_base, 'M_0200MeV'),
-               os.path.join(inpath_base, 'M_0300MeV')]
-    # inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
+    #inpaths = [os.path.join(inpath_base, 'M_0200MeV'),
+    #           os.path.join(inpath_base, 'M_0300MeV')]
+    inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0200MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0400MeV')]
@@ -265,26 +265,27 @@ if __name__ == "__main__":
         #                     scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
         for int_type in ["em"]:
-            for pdf in pdf_list:
-                for neutype in neutrino_type:
-                    
-                  # total
-                  filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
-                  print("processing: "+filename)
-                  infilepath = inpath + '/' + filename + ".dat"
-                  if not os.path.isfile(infilepath):continue
-                  print('Infilepath: {}'.format(infilepath))
-                  SplineFitMaker1D(infilepath, outname = filename + ".fits",
-                          scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
-                  
-                  # differential
-                  filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
-                  print("processing: "+filename)
-                  infilepath = inpath + '/' + filename + ".dat"
-                  if not os.path.isfile(infilepath):continue
-                  print('Infilepath: {}'.format(infilepath))
-                  SplineFitMaker3D(infilepath, outname = filename + ".fits",
-                          scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log')
+            for smooth in [1e0,1e-5,1e-10]:
+                for pdf in pdf_list:
+                    for neutype in neutrino_type:
+                        
+                        # total
+                        filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
+                        print("processing: "+filename)
+                        infilepath = inpath + '/' + filename + ".dat"
+                        if not os.path.isfile(infilepath):continue
+                        print('Infilepath: {}'.format(infilepath))
+                        SplineFitMaker1D(infilepath, outname = filename + ".fits",
+                                scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
+                        
+                        # differential
+                        filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
+                        print("processing: "+filename)
+                        infilepath = inpath + '/' + filename + ".dat"
+                        if not os.path.isfile(infilepath):continue
+                        print('Infilepath: {}'.format(infilepath))
+                        SplineFitMaker3D(infilepath, outname = filename + "_smooth%2.2e.fits"%smooth,
+                                scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log', smooth=smooth)
 
 #     #### Start - Original code (carguelles) ####
 

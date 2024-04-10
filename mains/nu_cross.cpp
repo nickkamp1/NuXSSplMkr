@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
   double cm2 = SQ(pc->cm);
   double m2 = SQ(pc->meter);
 
-  for (Current IT : {EM}) {
+  for (Current IT : {NC,EM}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
     for (NeutrinoType neutype : {neutrino}){
