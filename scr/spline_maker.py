@@ -23,7 +23,7 @@ def ModLog10(x):
     else:
         return numpy.log10(x)
 
-ModLog10 = numpy.vectorize(ModLog10)
+ModLog10 = numpy.vectorize(ModLog10,otypes=[numpy.float64])
 
 def SplineFitMaker1D(filename, scale = 'lin', prefix = '', skip_header = 0, column = 1, N = 50, outname = "", oscale = 'lin'):
     """
@@ -159,7 +159,7 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
         print("Error: column < 3.")
         exit()
 
-    datas = numpy.loadtxt(filename, skiprows = skip_header)
+    datas = numpy.loadtxt(filename, skiprows = skip_header, dtype=float)
 
     f = lambda x : x
     if scale == "log":
@@ -186,6 +186,7 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     y = f(datas[0,:,0,1])
     w = f(datas[0,0,:,2])
     z = of(datas[:,:,:,column])
+    print(z)
 
     knots = [numpy.linspace(x.min()-1,x.max()+1,N,endpoint = True),
              numpy.linspace(y.min()-1,y.max()+1,N,endpoint = True),
@@ -264,8 +265,8 @@ if __name__ == "__main__":
         #             SplineFitMaker1D(infilepath, outname = filename + ".fits",
         #                     scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
-        for int_type in ["em"]:
-            for smooth in [1e0,1e-5,1e-10]:
+        for int_type in ["nc","em"]:
+            for smooth in [1e-15]:
                 for pdf in pdf_list:
                     for neutype in neutrino_type:
                         
