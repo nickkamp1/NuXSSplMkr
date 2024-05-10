@@ -50,6 +50,9 @@ aaron: bin/nu_cross_full_a_la_aaron_muon.exe bin/nu_cross_full_a_la_aaron_tau.ex
 bin/nu_cross.exe: src/lhapdf_cross_section.o src/physconst.o mains/nu_cross.o
 	$(LD)  $^ $(LIBS) $(LD_FLAGS) -o $@
 
+bin/nu_cross_hnl.exe: src/lhapdf_cross_section.o src/physconst.o mains/nu_cross_hnl.o
+	$(LD)  $^ $(LIBS) $(LD_FLAGS) -o $@
+
 bin/nu_cross_classic.exe: src/lhapdf_cross_section.o src/physconst.o mains/nu_cross_classic.o
 	$(LD)  $^ $(LIBS) $(LD_FLAGS) -o $@
 

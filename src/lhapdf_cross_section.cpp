@@ -1040,7 +1040,7 @@ double LHAXS::KernelXS(double * k){
 
   d_lepton = SQ(M_lepton)/(2.*M_iso*ENU);
 
-  if(INT_TYPE==CC || IS_HNL==true){  // only CC, but if it's HNL then also NC
+  if(INT_TYPE==CC || (INT_TYPE==NC && IS_HNL==true)){  // only CC, but if it's HNL then also NC
     //Following HEP PH 0407371 Eq. (7)
     double h = x*y + d_lepton;
     if((1. + x* d_nucleon) * h*h - (x+ d_lepton)*h + x * d_lepton > 0.){

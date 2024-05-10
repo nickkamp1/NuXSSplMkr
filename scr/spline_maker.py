@@ -181,12 +181,17 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
 
     shape = tuple(numpy.unique(datas[:,i]).size for i in range(3))
     datas = datas.reshape(shape + (int(datas.size/reduce(operator.mul,shape)),))
+    print(datas.shape)
+    zero_mask = (datas[:,:,:,column]>0)
+    print(zero_mask)
+    #datas = datas[zero_mask]
+    print(datas.shape)
 
     x = f(datas[:,0,0,0])
     y = f(datas[0,:,0,1])
     w = f(datas[0,0,:,2])
     z = of(datas[:,:,:,column])
-    print(z)
+    print(x)
 
     knots = [numpy.linspace(x.min()-1,x.max()+1,N,endpoint = True),
              numpy.linspace(y.min()-1,y.max()+1,N,endpoint = True),
@@ -198,6 +203,8 @@ def SplineFitMaker3D(filename, scale = 'lin', prefix = '', skip_header = 0, colu
     penaltyorder = [2 for _ in range(3)]
 
     weight = numpy.ones(z.shape)
+    weight = numpy.array(z > -50,dtype=float)
+    print(weight)
     #weight = 1+zz
     zs,weight = ndsparse.from_data(z,weight)
     result = glam_fit(zs,weight,[x,y,w],knots,order,smooth,penaltyorder)
@@ -234,7 +241,7 @@ if __name__ == "__main__":
     # only a specific mass
     #inpaths = [os.path.join(inpath_base, 'M_0200MeV'),
     #           os.path.join(inpath_base, 'M_0300MeV')]
-    inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
+    inpaths = [os.path.join(inpath_base, 'M_0300MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0200MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0400MeV')]
@@ -285,7 +292,7 @@ if __name__ == "__main__":
                         infilepath = inpath + '/' + filename + ".dat"
                         if not os.path.isfile(infilepath):continue
                         print('Infilepath: {}'.format(infilepath))
-                        SplineFitMaker3D(infilepath, outname = filename + "_smooth%2.2e.fits"%smooth,
+                        SplineFitMaker3D(infilepath, outname = filename + "_masked_smooth%2.2e.fits"%smooth,
                                 scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log', smooth=smooth)
 
 #     #### Start - Original code (carguelles) ####
