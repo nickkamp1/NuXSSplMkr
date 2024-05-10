@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for ((mN = 400 ; mN <= 1000 ; mN+=100)); do
-  echo ./nu_cross.exe PDF4LHC21_mc $mN true ./
-  ./nu_cross.exe PDF4LHC21_mc $mN true ./
-done
+./nu_cross_hnl.exe GRV98lo_patched 0300 true ./
+./nu_cross_hnl.exe GRV98lo_patched 0600 true ./
+./nu_cross_hnl.exe GRV98lo_patched 1000 true ./
+./nu_cross_hnl.exe GRV98lo_patched 0100 true ./

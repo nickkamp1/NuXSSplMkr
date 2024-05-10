@@ -13,6 +13,7 @@ LHAXS::LHAXS(std::string PDFname){
     M_iso  =    0.5*(pc->proton_mass + pc->neutron_mass);
     Mw2 = SQ(pc->Wboson_mass);
     Mz2 = SQ(pc->Zboson_mass);
+    LHAPDF::pathsPrepend("/n/holylfs05/LABS/arguelles_delgado_lab/Everyone/nkamp/LIV2/sources/NuXSSplMkr/data/LHAPDF5/");
     set = new LHAPDF::PDFSet(pdfname);
     if (set->errorType()=="custom")
         is_var = true;

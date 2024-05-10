@@ -3,6 +3,7 @@
 
 #define SQ(X)  ((X)*(X))
 #include "LHAPDF/LHAPDF.h"
+#include "LHAPDF/Paths.h"
 #include "LHAPDF/GridPDF.h"
 #include "LHAPDF/Extrapolator.h"
 #include "physconst.h"
