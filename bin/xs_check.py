@@ -14,21 +14,23 @@ noHNL = True
 current = "nc"
 nutype = "nubar"
 nutype_orig = "nutaubar" if "bar" in nutype else "nutau"
+plot_orig = False
 
-for M in ["0100","0300","0600","1000"]:
+for M in ["1000"]:
     for nutype in ["nu","nubar"]:
         nutype_orig = "nutaubar" if "bar" in nutype else "nutau"
-        for current in ["nc"]:
+        for current in ["em"]:
 
             figure_dir = "M_%sMeV/figures/%s/%s/"%(M,nutype,current)
             os.makedirs(figure_dir,exist_ok=True)
 
             data_tot = np.loadtxt("M_%sMeV/data/sigma-%s-N-%s-%s_central.dat"%(M,nutype,current,PDFset))
             spline_tot = photospline.SplineTable("M_%sMeV/splines/sigma-%s-N-%s-%s_central.fits"%(M,nutype,current,PDFset))
-            spline_orig_tot = photospline.SplineTable("M_%sMeV/splines/Original/sigma-%s-N-nc-GRV98lo_patched_central.fits"%(M,nutype_orig))
             plt.plot(data_tot[:,0],data_tot[:,1],color="black",label="True")
             plt.plot(data_tot[:,0],10**spline_tot.evaluate_simple([np.log10(data_tot[:,0])]),color="red",ls="-.",label="New Spline")
-            plt.plot(data_tot[:,0],10**spline_orig_tot.evaluate_simple([np.log10(data_tot[:,0])]),color="blue",ls="-.",label="Orig Spline")
+            if plot_orig:
+                spline_orig_tot = photospline.SplineTable("M_%sMeV/splines/Original/sigma-%s-N-nc-GRV98lo_patched_central.fits"%(M,nutype_orig))
+                plt.plot(data_tot[:,0],10**spline_orig_tot.evaluate_simple([np.log10(data_tot[:,0])]),color="blue",ls="-.",label="Orig Spline")
             plt.legend()
             plt.loglog()
             plt.xlabel(r"$E_\nu$ [GeV]")
@@ -37,7 +39,7 @@ for M in ["0100","0300","0600","1000"]:
             plt.clf()
 
             plt.plot(data_tot[:,0],10**spline_tot.evaluate_simple([np.log10(data_tot[:,0])])/data_tot[:,1],color="red",ls="--",label="New Spline Fit")
-            plt.plot(data_tot[:,0],10**spline_orig_tot.evaluate_simple([np.log10(data_tot[:,0])])/data_tot[:,1],color="blue",ls="-.",label="Original Spline Fit")
+            if plot_orig: plt.plot(data_tot[:,0],10**spline_orig_tot.evaluate_simple([np.log10(data_tot[:,0])])/data_tot[:,1],color="blue",ls="-.",label="Original Spline Fit")
             plt.legend()
             plt.loglog()
             plt.xlabel(r"$E_\nu$ [GeV]")
@@ -54,7 +56,7 @@ for M in ["0100","0300","0600","1000"]:
                 spline_new_noHNL = photospline.SplineTable("M_0000MeV/dsdxdy-%s-N-%s-%s_central.fits"%(nutype,current,PDFset))
                 data_new = data_noHNL
                 spline_new = spline_new_noHNL 
-            spline_orig = photospline.SplineTable("M_%sMeV/splines/Original/dsdxdy-%s-N-nc-GRV98lo_patched_central.fits"%(M,nutype_orig))
+            if plot_orig: spline_orig = photospline.SplineTable("M_%sMeV/splines/Original/dsdxdy-%s-N-nc-GRV98lo_patched_central.fits"%(M,nutype_orig))
 
             cmap = mpl.colormaps["prism"]
             energies = np.unique(data[:,0])
@@ -67,7 +69,7 @@ for M in ["0100","0300","0600","1000"]:
                 if current=="nc":
                     xs = xs[:-1:int(len(xs)/5)]
                 else:
-                    xs = xs[-int(len(xs)/5)::int(len(xs)/15)]
+                    xs = xs[-int(len(xs)/2)::int(len(xs)/50)]
                 plot_anything = False
                 for i,x in enumerate(xs):
                     dsigdxy = data[np.logical_and(data[:,0]==energy,data[:,1]==x)]
@@ -84,18 +86,18 @@ for M in ["0100","0300","0600","1000"]:
                     ax[0].plot(dsigdxy[:,2],true_xs,color="black")
                     if noHNL: ax[0].plot(dsigdxy_new[:,2],true_xs_new,color="grey")
                     ax[0].plot(dsigdxy[:,2],10**spline_new.evaluate_simple([np.log10(energy),np.log10(x),np.log10(dsigdxy[:,2])]),color=cmap(i/len(xs)),ls="--")
-                    ax[0].plot(dsigdxy[:,2],10**spline_orig.evaluate_simple([np.log10(energy),np.log10(x),np.log10(dsigdxy[:,2])]),color=cmap(i/len(xs)),ls="-.")
+                    if plot_orig: ax[0].plot(dsigdxy[:,2],10**spline_orig.evaluate_simple([np.log10(energy),np.log10(x),np.log10(dsigdxy[:,2])]),color=cmap(i/len(xs)),ls="-.")
 
                     # ratio plots
                     ax[1].plot(dsigdxy[:,2],true_xs/true_xs,color="black")
                     ax[1].plot(dsigdxy[:,2],10**spline_new.evaluate_simple([np.log10(energy),np.log10(x),np.log10(dsigdxy[:,2])])/true_xs_new,color=cmap(i/len(xs)),ls="--")
-                    ax[1].plot(dsigdxy[:,2],10**spline_orig.evaluate_simple([np.log10(energy),np.log10(x),np.log10(dsigdxy[:,2])])/true_xs,color=cmap(i/len(xs)),ls="-.")
+                    if plot_orig: ax[1].plot(dsigdxy[:,2],10**spline_orig.evaluate_simple([np.log10(energy),np.log10(x),np.log10(dsigdxy[:,2])])/true_xs,color=cmap(i/len(xs)),ls="-.")
 
                 if not plot_anything: continue
                 ax[0].plot([],[],color="black",label="True (w/ HNL)")
                 if noHNL: ax[0].plot([],[],color="grey",label="True (w/o HNL)")
                 ax[0].plot([],[],color="black",ls="--",label="New Spline Fit")
-                ax[0].plot([],[],color="black",ls="-.",label="Original Spline Fit")
+                if plot_orig: ax[0].plot([],[],color="black",ls="-.",label="Original Spline Fit")
                 l = ax[0].legend(ncol=2)
                 ax[0].loglog()
                 ax[1].loglog()
@@ -103,6 +105,8 @@ for M in ["0100","0300","0600","1000"]:
                 ax[1].set_xlabel("Bjorken y")
                 ax[0].set_ylabel(r"$d^2\sigma /dxdy~[{\rm cm}^{2}]$")
                 ax[1].set_ylabel(r"$d^2\sigma /dxdy$ (Spline/True)")
+                ax[0].set_ylim(1e-2*min(true_xs_new),1e2*max(true_xs_new))
+                ax[1].set_ylim(1e-2,1e2)
                 plt.tight_layout()
                 plt.savefig("M_%sMeV/figures/%s/%s/diff_%2.2e_log.pdf"%(M,nutype,current,energy),dpi=50)
                 ax[0].set_xscale("linear")

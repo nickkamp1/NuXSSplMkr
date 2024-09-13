@@ -154,6 +154,7 @@ class LHAXS{
     public:
         double total();
         double totalVar();
+        double Threshold();
 
         ~LHAXS(){
             delete pc;

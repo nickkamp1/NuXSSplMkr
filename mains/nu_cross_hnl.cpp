@@ -1,4 +1,5 @@
 #include "lhapdf_cross_section.h"
+#include <filesystem>
 
 //#define SINGLE_ENERGY_TEST
 
@@ -14,8 +15,11 @@ int main(int argc, char* argv[]){
   ss_bool >> std::boolalpha >> is_hnl;
   std::string SAVE_PATH = (string) argv[4];
   std::ostringstream ss;
-  ss << std::setw(4) << std::setfill('0') << (string) argv[2];
+  ss << std::setw(7) << std::setfill('0') << (string) argv[2];
   std::string mass_string = ss.str();
+  // std::string filename = SAVE_PATH+"M"+mass_string+"MeV/";
+  // std::cout << "Creating " << filename << std::endl;
+  // std::filesystem::create_directory(filename);
   LHAXS xs_obj(pdfname);
   LHAXS xs_obj_HNL(pdfname);
 
@@ -43,6 +47,7 @@ int main(int argc, char* argv[]){
   // automatic mass/hnl configuration
   std::cout << "Lepton mass (still NuMu/NuMuBar primary): " << mass_double << std::endl;
   xs_obj_HNL.Set_M_Lepton(mass_double*xs_obj.pc->GeV);
+  std::cout << "Threshold: " << xs_obj_HNL.Threshold() << std::endl;
   // set bool to use custom cross section (or not)
   // std::cout << "Bool to use custom HNL cross section calculator: " << is_hnl << std::endl;
   xs_obj_HNL.Set_IS_HNL(is_hnl);
@@ -72,12 +77,15 @@ int main(int argc, char* argv[]){
         ofstream outputfile_dsdxdy_noHNL(filename_dsdxdy_noHNL.c_str());
         ofstream outputfile_sigma(filename_sigma.c_str());
 
-        for (double logenu=0.;logenu<=4.;logenu+=0.05){
+        double Emin = std::max(10.,1.1*xs_obj_HNL.Threshold());
+        for (double logenu=std::log10(Emin);logenu<=6.;logenu+=0.05){
           double enu = pow(10, logenu);
+          std::cout << enu << std::endl;
           xs_obj.Set_Neutrino_Energy(enu*xs_obj.pc->GeV);
           xs_obj_HNL.Set_Neutrino_Energy(enu*xs_obj.pc->GeV);
-          double sigma = xs_obj_HNL.total() / m2; // use the HNL version for the total cross section
+          double sigma = xs_obj_HNL.total(); // use the HNL version for the total cross section
           outputfile_sigma << enu << "\t" << sigma << std::endl;
+          continue;
           for (double logx=-5.;logx<0.;logx+=0.025){
             double x = pow(10, logx);
             for (double logy=-5.;logy<0.;logy+=0.025){
@@ -86,10 +94,10 @@ int main(int argc, char* argv[]){
                 zz[0] = log(x);
                 zz[1] = log(y);
 
-                double dsigdxdy = xs_obj.KernelXS(zz) / m2; // use the non-HNL version for the differential cross section
+                double dsigdxdy = xs_obj.KernelXS(zz); // use the non-HNL version for the differential cross section
                 outputfile_dsdxdy_noHNL << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
 
-                dsigdxdy = xs_obj_HNL.KernelXS(zz) / m2; 
+                dsigdxdy = xs_obj_HNL.KernelXS(zz);
                 outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
             }
           }

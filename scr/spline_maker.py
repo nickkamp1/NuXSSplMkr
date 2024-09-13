@@ -236,7 +236,11 @@ if __name__ == "__main__":
     # only a specific mass
     #inpaths = [os.path.join(inpath_base, 'M_0200MeV'),
     #           os.path.join(inpath_base, 'M_0300MeV')]
-    inpaths = [os.path.join(inpath_base, 'M_0100MeV')]
+    inpaths = [os.path.join(inpath_base, 'M_0100MeV'),
+               #os.path.join(inpath_base, 'M_0300MeV'),
+               #os.path.join(inpath_base, 'M_0600MeV'),
+               os.path.join(inpath_base, 'M_1000MeV')
+               ]
     # inpaths = [os.path.join(inpath_base, 'M_0200MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0000MeV')]
     # inpaths = [os.path.join(inpath_base, 'M_0400MeV')]
@@ -267,14 +271,14 @@ if __name__ == "__main__":
         #             SplineFitMaker1D(infilepath, outname = filename + ".fits",
         #                     scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
-        for int_type in ["nc"]:
+        for int_type in ["em"]:
             for pdf in pdf_list:
                 for neutype in neutrino_type:
                     
                     # total
                     filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
                     print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + ".dat"
+                    infilepath = inpath + '/data/' + filename + ".dat"
                     if not os.path.isfile(infilepath):continue
                     print('Infilepath: {}'.format(infilepath))
                     SplineFitMaker1D(infilepath, outname = filename + ".fits",
@@ -283,7 +287,7 @@ if __name__ == "__main__":
                     # differential
                     filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
                     print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + ".dat"
+                    infilepath = inpath + '/data/' + filename + ".dat"
                     if not os.path.isfile(infilepath):continue
                     print('Infilepath: {}'.format(infilepath))
                     SplineFitMaker3D(infilepath, outname = filename + ".fits",

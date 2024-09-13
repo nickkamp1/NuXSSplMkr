@@ -67,7 +67,7 @@ double LHAXS::SigR_Nu_LO_NC(double x, double y,
   //SigRcoef[6]  =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
   //SigRcoef[-6] =    (Lu2 + Ru2) + (Lu2 + Ru2)*(1. - y)*(1. - y);
   SigRcoef[21] =   0. ;
-  } 
+  }
   else {
   //fixes for antineutrinos
   SigRcoef[1]  =    0.5*(Lu2 + Ld2)*(1. - y)*(1. - y) + 0.5*(Ru2 + Rd2);
@@ -84,7 +84,7 @@ double LHAXS::SigR_Nu_LO_NC(double x, double y,
   //SigRcoef[-6] =    (Lu2 + Ru2)*(1. - y)*(1. - y) + (Lu2 + Ru2);
   SigRcoef[21] =   0. ;
   }
-  
+
 
 	// mean value
     switch (c){
@@ -143,7 +143,7 @@ double LHAXS::SigR_Nu_LO_NC(double x, double y,
 	        				cov_m[{p,u}]);
 	        		}
 	        	}
-	        }	
+	        }
 	        k = sqrt(k);
             break;
     }
@@ -172,8 +172,8 @@ double LHAXS::SigR_Nu_LO_EM(double x, double y,
   SigRcoef[-6] =    -2./3.;
   SigRcoef[21] =   0. ;
 
-  for (int p : partons) { 
-    SigRcoef[p] = std::pow(SigRcoef[p],2); 
+  for (int p : partons) {
+    SigRcoef[p] = std::pow(SigRcoef[p],2);
   }
 
 	// mean value
@@ -233,7 +233,7 @@ double LHAXS::SigR_Nu_LO_EM(double x, double y,
 	        				cov_m[{p,u}]);
 	        		}
 	        	}
-	        }	
+	        }
 	        k = sqrt(k);
             break;
     }
@@ -338,7 +338,7 @@ double LHAXS::SigR_Nu_LO_CC(double x, double y,
 	        				cov_m[{p,u}]);
 	        		}
 	        	}
-	        }	
+	        }
 	        k = sqrt(k);
             break;
     }
@@ -401,7 +401,7 @@ double LHAXS::F2(map<int, double>& xq_arr) const{
 	// mean value
 	for( int p : partons ) {
 		k += F2coef[p]*xq_arr[p];
-	}	
+	}
     return k;
 }
 
@@ -431,7 +431,7 @@ double LHAXS::xF3(map<int, double>& xq_arr) const{
 	// mean value
 	for( int p : partons ) {
 		k += F3coef[p]*xq_arr[p];
-	}	
+	}
 
     return k;
 }
@@ -655,7 +655,7 @@ double LHAXS::Evaluate(double Q2, double x, double y, int a){
                     smp += dfx*dfx;
                 else
                     smm += dfx*dfx;
-            }	
+            }
 
             // parametrization error
             double dfxpm = 0;
@@ -672,14 +672,14 @@ double LHAXS::Evaluate(double Q2, double x, double y, int a){
                     spm = dfx*dfx;
                     dfxmm = dfx;
                 }
-            }	
+            }
 
             // add
             xerror.central = grid_central -> xfxQ(p,x,q);
             xerror.errplus = sqrt(smp+spp);
             xerror.errminus = sqrt(smm+spm);
             xerror.errsymm = max(xerror.errplus,xerror.errminus);
-        } else 
+        } else
             xerror = set->uncertainty(xf,error_band);
 
 		xer_arr.insert({p,xerror});
@@ -715,7 +715,7 @@ double LHAXS::Evaluate(double Q2, double x, double y, int a){
                 smp += dfx*dfx;
             else
                 smm += dfx*dfx;
-        }	
+        }
         // parametrization error
         double dfxpm = 0;
         double dfxmm = 0;
@@ -731,12 +731,12 @@ double LHAXS::Evaluate(double Q2, double x, double y, int a){
                 spm = dfx*dfx;
                 dfxmm = dfx;
             }
-        }	
+        }
         xerror.central = grid_central -> xfxQ(21,x,q);
         xerror.errplus = sqrt(smp+spp);
         xerror.errminus = sqrt(smm+spm);
         xerror.errsymm = max(xerror.errplus,xerror.errminus);
-    } else 
+    } else
         xerror = set->uncertainty(xg,error_band);
 
 	xpdf_arr.insert({gluon_index,xg});
@@ -822,7 +822,7 @@ template<class T,double (T::*f)(double,double),int n,int m>
 double LHAXS::HGeneric(double xi, double q2){
     gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
     double result, error;
-    
+
     gsl_function F;
     F.function = &HK<T,f,n,m>;
     F.params = this;
@@ -876,10 +876,10 @@ double LHAXS::F2_TMC(double x, double q2){
     double r  = R(x, q2);
     double g2 = G2(xi, q2);
     double h2 = H2(xi, q2);
-    
+
     double sum1 = x*x/(SQ(xi) * r*r*r) * F2(xi, q2);
     double sum2 = 6.*M_iso*M_iso* x*x*x  * h2 / (q2* r*r*r*r);
-    
+
     double sum3 = 12.*M_iso*M_iso* SQ(SQ(x)) * g2 / (SQ(q2) * r*r*r*r*r );
     return sum1+sum2+sum3;
 }
@@ -889,7 +889,7 @@ double LHAXS::F3_TMC(double x, double q2){
     double r  = R(x, q2);
     double g2 = G2(xi, q2);
     double h3 = H3(xi, q2);
-    
+
     double sum1 = x/(xi * r*r) * F3(xi, q2);
     double sum2 = 2.*M_iso*M_iso* x*x  * h3 / (q2* r*r*r);
 
@@ -1221,4 +1221,9 @@ double LHAXS::total(){
   gsl_rng_free (r);
   //std::cout << "Result: " << res << std::endl;
   return res;
+}
+
+double LHAXS::Threshold() {
+  if (M_lepton<0) return 0;
+  return (M_lepton*M_lepton - M_iso*M_iso)/(2*M_iso)/pc->GeV;
 }

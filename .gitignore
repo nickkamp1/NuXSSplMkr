@@ -35,3 +35,9 @@
 *.dat
 *.fits
 *.xml
+
+# figures
+*.pdf
+.vscode/settings.json
+
+.ipynb_checkpoints/
