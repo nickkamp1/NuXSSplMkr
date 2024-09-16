@@ -41,3 +41,5 @@
 .vscode/settings.json
 
 .ipynb_checkpoints/
+
+bin/logging/

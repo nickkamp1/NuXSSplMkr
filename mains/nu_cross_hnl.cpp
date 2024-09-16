@@ -56,7 +56,7 @@ int main(int argc, char* argv[]){
   double cm2 = SQ(pc->cm);
   double m2 = SQ(pc->meter);
 
-  for (Current IT : {NC}) {
+  for (Current IT : {EM}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
     xs_obj_HNL.Set_InteractionType(IT);
@@ -65,16 +65,16 @@ int main(int argc, char* argv[]){
       xs_obj.Set_CP_factor(CP_factor[neutype]);
       xs_obj_HNL.Set_CP_factor(CP_factor[neutype]);
       for (PDFVar pdfvar : {central}){
-        std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
-        std::string filename_dsdxdy_noHNL = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_noHNL.dat";
+        //std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
+        //std::string filename_dsdxdy_noHNL = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_noHNL.dat";
         std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
 
-        std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
+        //std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
         std::cout << "Total filename: " << filename_sigma << std::endl;
 
 
-        ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
-        ofstream outputfile_dsdxdy_noHNL(filename_dsdxdy_noHNL.c_str());
+        //ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
+        //ofstream outputfile_dsdxdy_noHNL(filename_dsdxdy_noHNL.c_str());
         ofstream outputfile_sigma(filename_sigma.c_str());
 
         double Emin = std::max(10.,1.1*xs_obj_HNL.Threshold());
@@ -86,25 +86,25 @@ int main(int argc, char* argv[]){
           double sigma = xs_obj_HNL.total(); // use the HNL version for the total cross section
           outputfile_sigma << enu << "\t" << sigma << std::endl;
           continue;
-          for (double logx=-5.;logx<0.;logx+=0.025){
-            double x = pow(10, logx);
-            for (double logy=-5.;logy<0.;logy+=0.025){
-                double y = pow(10, logy);
-                double zz[2];
-                zz[0] = log(x);
-                zz[1] = log(y);
+          // for (double logx=-5.;logx<0.;logx+=0.025){
+          //   double x = pow(10, logx);
+          //   for (double logy=-5.;logy<0.;logy+=0.025){
+          //       double y = pow(10, logy);
+          //       double zz[2];
+          //       zz[0] = log(x);
+          //       zz[1] = log(y);
 
-                double dsigdxdy = xs_obj.KernelXS(zz); // use the non-HNL version for the differential cross section
-                outputfile_dsdxdy_noHNL << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
+          //       double dsigdxdy = xs_obj.KernelXS(zz); // use the non-HNL version for the differential cross section
+          //       outputfile_dsdxdy_noHNL << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
 
-                dsigdxdy = xs_obj_HNL.KernelXS(zz);
-                outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
-            }
-          }
+          //       dsigdxdy = xs_obj_HNL.KernelXS(zz);
+          //       outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
+          //   }
+          // }
         }
 
-        outputfile_dsdxdy.close();
-        outputfile_dsdxdy_noHNL.close();
+        // outputfile_dsdxdy.close();
+        // outputfile_dsdxdy_noHNL.close();
         outputfile_sigma.close();
       }
     }
