@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
   // std::cout << "Creating " << filename << std::endl;
   // std::filesystem::create_directory(filename);
   LHAXS xs_obj(pdfname);
-  LHAXS xs_obj_HNL(pdfname);
+  //LHAXS xs_obj_HNL(pdfname);
 
   //enum IntType {CC,NC};
   enum NeutrinoType {neutrino,antineutrino};
@@ -34,77 +34,58 @@ int main(int argc, char* argv[]){
   std::map<PDFVar,int> PDFVarIndex {{central,0},{minus,-1},{plus,1}};
   std::map<PDFVar,std::string> PDFVarLabel {{central,"central"},{minus,"minus"},{plus,"plus"}};
 
-  // muon mass
-  //xs_obj.Set_M_Lepton(0.105*xs_obj.pc->GeV);
-
   // // HNL mass
-  // std::cout << "HNL mass: " << mass_double << std::endl;
-  // xs_obj.Set_M_Lepton(mass_double*xs_obj.pc->GeV);
-  // // set bool to use custom cross section
-  // xs_obj.Set_IS_HNL(true);
+  std::cout << "HNL mass: " << mass_double << std::endl;
+  xs_obj.Set_M_Lepton(mass_double*xs_obj.pc->GeV);
+  std::cout << "Threshold: " << xs_obj.Threshold() << std::endl;
+  // set bool to use custom cross section
+  xs_obj.Set_IS_HNL(is_hnl);
 
-
-  // automatic mass/hnl configuration
-  std::cout << "Lepton mass (still NuMu/NuMuBar primary): " << mass_double << std::endl;
-  xs_obj_HNL.Set_M_Lepton(mass_double*xs_obj.pc->GeV);
-  std::cout << "Threshold: " << xs_obj_HNL.Threshold() << std::endl;
-  // set bool to use custom cross section (or not)
-  // std::cout << "Bool to use custom HNL cross section calculator: " << is_hnl << std::endl;
-  xs_obj_HNL.Set_IS_HNL(is_hnl);
 
 
   double cm2 = SQ(pc->cm);
   double m2 = SQ(pc->meter);
 
-  for (Current IT : {EM}) {
+  for (Current IT : {NC}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
-    xs_obj_HNL.Set_InteractionType(IT);
     for (NeutrinoType neutype : {neutrino,antineutrino}){
       std::cout << "Neutrino Type: " << neutype << std::endl;
       xs_obj.Set_CP_factor(CP_factor[neutype]);
-      xs_obj_HNL.Set_CP_factor(CP_factor[neutype]);
       for (PDFVar pdfvar : {central}){
-        //std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
-        //std::string filename_dsdxdy_noHNL = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_noHNL.dat";
-        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
+        std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_m2.dat";
+        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_m2.dat";
 
-        //std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
+        std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
         std::cout << "Total filename: " << filename_sigma << std::endl;
 
 
-        //ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
-        //ofstream outputfile_dsdxdy_noHNL(filename_dsdxdy_noHNL.c_str());
+        ofstream outputfile_dsdxdy(filename_dsdxdy.c_str());
         ofstream outputfile_sigma(filename_sigma.c_str());
+        std::cout << "Threshold: " << xs_obj.Threshold() << std::endl;
 
-        double Emin = std::max(10.,1.1*xs_obj_HNL.Threshold());
+        double Emin = std::max(10.,1.2*xs_obj.Threshold());
         for (double logenu=std::log10(Emin);logenu<=6.;logenu+=0.05){
           double enu = pow(10, logenu);
           std::cout << enu << std::endl;
           xs_obj.Set_Neutrino_Energy(enu*xs_obj.pc->GeV);
-          xs_obj_HNL.Set_Neutrino_Energy(enu*xs_obj.pc->GeV);
-          double sigma = xs_obj_HNL.total(); // use the HNL version for the total cross section
+          double sigma = xs_obj.total() / m2; // be careful of units!!!
           outputfile_sigma << enu << "\t" << sigma << std::endl;
-          continue;
-          // for (double logx=-5.;logx<0.;logx+=0.025){
-          //   double x = pow(10, logx);
-          //   for (double logy=-5.;logy<0.;logy+=0.025){
-          //       double y = pow(10, logy);
-          //       double zz[2];
-          //       zz[0] = log(x);
-          //       zz[1] = log(y);
+          for (double logx=-5.;logx<0.;logx+=0.025){
+            double x = pow(10, logx);
+            for (double logy=-5.;logy<0.;logy+=0.025){
+                double y = pow(10, logy);
+                double zz[2];
+                zz[0] = log(x);
+                zz[1] = log(y);
 
-          //       double dsigdxdy = xs_obj.KernelXS(zz); // use the non-HNL version for the differential cross section
-          //       outputfile_dsdxdy_noHNL << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
-
-          //       dsigdxdy = xs_obj_HNL.KernelXS(zz);
-          //       outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
-          //   }
-          // }
+                double dsigdxdy = xs_obj.KernelXS(zz) / m2;
+                outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
+            }
+          }
         }
 
-        // outputfile_dsdxdy.close();
-        // outputfile_dsdxdy_noHNL.close();
+        outputfile_dsdxdy.close();
         outputfile_sigma.close();
       }
     }

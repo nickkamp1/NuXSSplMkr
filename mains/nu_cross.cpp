@@ -8,14 +8,7 @@ int main(int argc, char* argv[]){
 
   // Get arguments
   std::string pdfname = (string) argv[1];
-  double mass_double = atof(argv[2])/1000.;  // mass must be given in MeV
-  std::stringstream ss_bool(argv[3]);
-  bool is_hnl;
-  ss_bool >> std::boolalpha >> is_hnl;
-  std::string SAVE_PATH = (string) argv[4];
-  std::ostringstream ss;
-  ss << std::setw(4) << std::setfill('0') << (string) argv[2];
-  std::string mass_string = ss.str();
+  std::string SAVE_PATH = (string) argv[2];
   LHAXS xs_obj(pdfname);
 
   //enum IntType {CC,NC};
@@ -30,35 +23,21 @@ int main(int argc, char* argv[]){
   std::map<PDFVar,std::string> PDFVarLabel {{central,"central"},{minus,"minus"},{plus,"plus"}};
 
   // muon mass
-  //xs_obj.Set_M_Lepton(0.105*xs_obj.pc->GeV);
-
-  // // HNL mass
-  // std::cout << "HNL mass: " << mass_double << std::endl;
-  // xs_obj.Set_M_Lepton(mass_double*xs_obj.pc->GeV);
-  // // set bool to use custom cross section
-  // xs_obj.Set_IS_HNL(true);
-
-
-  // automatic mass/hnl configuration
-  std::cout << "Lepton mass (still NuMu/NuMuBar primary): " << mass_double << std::endl;
-  xs_obj.Set_M_Lepton(mass_double*xs_obj.pc->GeV);
-  // set bool to use custom cross section (or not)
-  // std::cout << "Bool to use custom HNL cross section calculator: " << is_hnl << std::endl;
-  xs_obj.Set_IS_HNL(is_hnl);
+  xs_obj.Set_M_Lepton(0.105*xs_obj.pc->GeV);
 
 
   double cm2 = SQ(pc->cm);
   double m2 = SQ(pc->meter);
 
-  for (Current IT : {NC,EM}) {
+  for (Current IT : {NC,CC}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
     for (NeutrinoType neutype : {neutrino}){
       std::cout << "Neutrino Type: " << neutype << std::endl;
       xs_obj.Set_CP_factor(CP_factor[neutype]);
       for (PDFVar pdfvar : {central}){
-        std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
-        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
+        std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
+        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+".dat";
 
         std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
         std::cout << "Total filename: " << filename_sigma << std::endl;

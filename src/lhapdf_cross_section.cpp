@@ -1225,5 +1225,6 @@ double LHAXS::total(){
 
 double LHAXS::Threshold() {
   if (M_lepton<0) return 0;
-  return (M_lepton*M_lepton - M_iso*M_iso)/(2*M_iso)/pc->GeV;
+  //return (M_lepton*M_lepton - M_iso*M_iso)/(2*M_iso)/pc->GeV;
+  return (M_lepton*M_lepton)/(2*M_iso)/pc->GeV;
 }

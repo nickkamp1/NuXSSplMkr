@@ -234,55 +234,57 @@ if __name__ == "__main__":
     # # take all masses
     # inpaths = glob(os.path.join(inpath_base, 'M_*'))
     # only a specific mass
-    inpaths = [#os.path.join(inpath_base, 'M_0100MeV'),
-               os.path.join(inpath_base, 'M_0000100MeV'),
-               os.path.join(inpath_base, 'M_0000200MeV'),
-               os.path.join(inpath_base, 'M_0000300MeV'),
-               os.path.join(inpath_base, 'M_0000400MeV'),
-               os.path.join(inpath_base, 'M_0000500MeV'),
-               os.path.join(inpath_base, 'M_0000600MeV'),
-               os.path.join(inpath_base, 'M_0000700MeV'),
-               os.path.join(inpath_base, 'M_0000800MeV'),
-               os.path.join(inpath_base, 'M_0000900MeV'),
-            #    os.path.join(inpath_base, 'M_0001500MeV'),
-            #    os.path.join(inpath_base, 'M_0002000MeV'),
-            #    os.path.join(inpath_base, 'M_0003000MeV'),
-            #    os.path.join(inpath_base, 'M_0004000MeV'),
-            #    os.path.join(inpath_base, 'M_0005000MeV'),
-            #    os.path.join(inpath_base, 'M_0006000MeV'),
-            #    os.path.join(inpath_base, 'M_0007000MeV'),
-            #    os.path.join(inpath_base, 'M_0008000MeV'),
-            #    os.path.join(inpath_base, 'M_0009000MeV'),
-            #    os.path.join(inpath_base, 'M_0001000MeV'),
-            #    os.path.join(inpath_base, 'M_0015000MeV'),
-            #    os.path.join(inpath_base, 'M_0020000MeV'),
-            #    os.path.join(inpath_base, 'M_0030000MeV'),
-            #    os.path.join(inpath_base, 'M_0040000MeV'),
-            #    os.path.join(inpath_base, 'M_0050000MeV'),
-            #    os.path.join(inpath_base, 'M_0060000MeV'),
-            #    os.path.join(inpath_base, 'M_0070000MeV'),
-            #    os.path.join(inpath_base, 'M_0080000MeV'),
-            #    os.path.join(inpath_base, 'M_0090000MeV'),
-            #    os.path.join(inpath_base, 'M_0010000MeV'),
-            #    os.path.join(inpath_base, 'M_0150000MeV'),
-            #    os.path.join(inpath_base, 'M_0200000MeV'),
-            #    os.path.join(inpath_base, 'M_0300000MeV'),
-            #    os.path.join(inpath_base, 'M_0400000MeV'),
-            #    os.path.join(inpath_base, 'M_0500000MeV'),
-            #    os.path.join(inpath_base, 'M_0600000MeV'),
-            #    os.path.join(inpath_base, 'M_0700000MeV'),
-            #    os.path.join(inpath_base, 'M_0800000MeV'),
-            #    os.path.join(inpath_base, 'M_0900000MeV'),
-            #    os.path.join(inpath_base, 'M_0100000MeV'),
-            #    os.path.join(inpath_base, 'M_1500000MeV'),
-            #    os.path.join(inpath_base, 'M_2000000MeV'),
-            #    os.path.join(inpath_base, 'M_3000000MeV'),
-            #    os.path.join(inpath_base, 'M_4000000MeV'),
-            #    os.path.join(inpath_base, 'M_5000000MeV'),
-            #    os.path.join(inpath_base, 'M_6000000MeV'),
-            #    os.path.join(inpath_base, 'M_7000000MeV'),
-            #    os.path.join(inpath_base, 'M_8000000MeV'),
-            #    os.path.join(inpath_base, 'M_9000000MeV'),
+    inpaths = [os.path.join(inpath_base, 'M_0000000MeV'),
+               #os.path.join(inpath_base, 'M_0100MeV'),
+               #os.path.join(inpath_base, 'M_0000100MeV'),
+               #os.path.join(inpath_base, 'M_0000200MeV'),
+               #os.path.join(inpath_base, 'M_0000300MeV'),
+               #os.path.join(inpath_base, 'M_0000400MeV'),
+               #os.path.join(inpath_base, 'M_0000500MeV'),
+               #os.path.join(inpath_base, 'M_0000600MeV'),
+               #os.path.join(inpath_base, 'M_0000700MeV'),
+               #os.path.join(inpath_base, 'M_0000800MeV'),
+               #os.path.join(inpath_base, 'M_0000900MeV'),
+               #os.path.join(inpath_base, 'M_0001000MeV'),
+               #os.path.join(inpath_base, 'M_0001500MeV'),
+               #os.path.join(inpath_base, 'M_0002000MeV'),
+               #os.path.join(inpath_base, 'M_0003000MeV'),
+               #os.path.join(inpath_base, 'M_0004000MeV'),
+               #os.path.join(inpath_base, 'M_0005000MeV'),
+               #os.path.join(inpath_base, 'M_0006000MeV'),
+               #os.path.join(inpath_base, 'M_0007000MeV'),
+               #os.path.join(inpath_base, 'M_0008000MeV'),
+               #os.path.join(inpath_base, 'M_0009000MeV'),
+               #os.path.join(inpath_base, 'M_0010000MeV'),
+               #os.path.join(inpath_base, 'M_0015000MeV'),
+               #os.path.join(inpath_base, 'M_0020000MeV'),
+               #os.path.join(inpath_base, 'M_0030000MeV'),
+               #os.path.join(inpath_base, 'M_0040000MeV'),
+               #os.path.join(inpath_base, 'M_0050000MeV'),
+               #os.path.join(inpath_base, 'M_0060000MeV'),
+               #os.path.join(inpath_base, 'M_0070000MeV'),
+               #os.path.join(inpath_base, 'M_0080000MeV'),
+               #os.path.join(inpath_base, 'M_0090000MeV'),
+               #os.path.join(inpath_base, 'M_0010000MeV'),
+               #os.path.join(inpath_base, 'M_0150000MeV'),
+               #os.path.join(inpath_base, 'M_0200000MeV'),
+               #os.path.join(inpath_base, 'M_0300000MeV'),
+               #os.path.join(inpath_base, 'M_0400000MeV'),
+               #os.path.join(inpath_base, 'M_0500000MeV'),
+               #os.path.join(inpath_base, 'M_0600000MeV'),
+               #os.path.join(inpath_base, 'M_0700000MeV'),
+               #os.path.join(inpath_base, 'M_0800000MeV'),
+               #os.path.join(inpath_base, 'M_0900000MeV'),
+               #os.path.join(inpath_base, 'M_0100000MeV'),
+               #os.path.join(inpath_base, 'M_1500000MeV'),
+               #os.path.join(inpath_base, 'M_2000000MeV'),
+               #os.path.join(inpath_base, 'M_3000000MeV'),
+               #os.path.join(inpath_base, 'M_4000000MeV'),
+               #os.path.join(inpath_base, 'M_5000000MeV'),
+               #os.path.join(inpath_base, 'M_6000000MeV'),
+               #os.path.join(inpath_base, 'M_7000000MeV'),
+               #os.path.join(inpath_base, 'M_8000000MeV'),
+               #os.path.join(inpath_base, 'M_9000000MeV'),
                ]
 
 
@@ -317,19 +319,19 @@ if __name__ == "__main__":
                     # total
                     filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
                     print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + ".dat"
+                    infilepath = inpath + '/' + filename + "_m2.dat"
                     if not os.path.isfile(infilepath):continue
                     print('Infilepath: {}'.format(infilepath))
-                    SplineFitMaker1D(infilepath, outname = filename + ".fits",
+                    SplineFitMaker1D(infilepath, outname = filename + "_m2.fits",
                             scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
                     # differential
                     filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
                     print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + ".dat"
+                    infilepath = inpath + '/' + filename + "_m2.dat"
                     if not os.path.isfile(infilepath):continue
                     print('Infilepath: {}'.format(infilepath))
-                    SplineFitMaker3D(infilepath, outname = filename + ".fits",
+                    SplineFitMaker3D(infilepath, outname = filename + "_m2.fits",
                             scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log', smooth=1e-15)
 
 #     #### Start - Original code (carguelles) ####
