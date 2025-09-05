@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
   for (Current IT : {NC,CC}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
-    for (NeutrinoType neutype : {neutrino}){
+    for (NeutrinoType neutype : {antineutrino}){
       std::cout << "Neutrino Type: " << neutype << std::endl;
       xs_obj.Set_CP_factor(CP_factor[neutype]);
       for (PDFVar pdfvar : {central}){
