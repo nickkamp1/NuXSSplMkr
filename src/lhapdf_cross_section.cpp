@@ -949,8 +949,8 @@ double LHAXS::KernelXS(double * k,int a){
   // }
   double norm, prefactor;
   if(INT_TYPE==EM) {
-    norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
-    prefactor = (1.-y)/y;
+    norm = 16  * M_PI * alpha * (1.-y)/y; // note this is dimensionless, as we don't include the TMM
+    prefactor = x*y;//(1.-y)/y; prefactor = jacobian
   }
   else {
     // same for CC and NC
@@ -986,8 +986,8 @@ double LHAXS::KernelXSVar(double * k){
 
   double norm, prefactor;
   if(INT_TYPE==EM) {
-    norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
-    prefactor = (1.-y)/y;
+    norm = 16  * M_PI * alpha * (1.-y)/y; // note this is dimensionless, as we don't include the TMM
+    prefactor = x*y; //(1.-y)/y; prefactor = jacobian
   }
   else {
     // same for CC and NC
@@ -1029,8 +1029,8 @@ double LHAXS::KernelXS(double * k){
 
   double norm, prefactor;
   if(INT_TYPE==EM) {
-    norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
-    prefactor = (1.-y)/y;
+    norm = 16  * M_PI * alpha * (1.-y)/y; // note this is dimensionless, as we don't include the TMM
+    prefactor = x*y;//(1.-y)/y; prefactor = jacobian
   }
   else {
     // same for CC and NC
@@ -1076,8 +1076,8 @@ double LHAXS::KernelXS_dsdyVar(double logx){
 
     double norm, prefactor;
     if(INT_TYPE==EM) {
-      norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
-      prefactor = (1.-Y)/(Y);
+      norm = 16  * M_PI * alpha * (1.-Y)/(Y); // note this is dimensionless, as we don't include the TMM
+      prefactor = x; // (1.-Y)/Y; prefactor = jacobian
     }
     else {
       // same for CC and NC
@@ -1104,8 +1104,8 @@ double LHAXS::KernelXS_dsdy(double logx){
 
     double norm, prefactor;
     if(INT_TYPE==EM) {
-      norm = 16  * M_PI * alpha; // note this is dimensionless, as we don't include the TMM
-      prefactor = -1./(Y*Y);
+      norm = 16  * M_PI * alpha * (1.-Y)/(Y); // note this is dimensionless, as we don't include the TMM
+      prefactor = x; //(1.-Y)/Y; prefactor = jacobian
     }
     else {
       // same for CC and NC

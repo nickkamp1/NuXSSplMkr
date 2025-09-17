@@ -46,6 +46,7 @@ int main(int argc, char* argv[]){
   double cm2 = SQ(pc->cm);
   double m2 = SQ(pc->meter);
 
+
   for (Current IT : {NC}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
@@ -53,8 +54,8 @@ int main(int argc, char* argv[]){
       std::cout << "Neutrino Type: " << neutype << std::endl;
       xs_obj.Set_CP_factor(CP_factor[neutype]);
       for (PDFVar pdfvar : {central}){
-        std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_m2.dat";
-        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_m2.dat";
+        std::string filename_dsdxdy = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/dsdxdy-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_v2.dat";
+        std::string filename_sigma = static_cast<std::string>(SAVE_PATH)+"M_"+mass_string+"MeV/sigma-"+NeutrinoTypeLabel[neutype]+"-N-"+IntTypeLabel[IT]+"-"+pdfname+"_"+PDFVarLabel[pdfvar]+"_v2.dat";
 
         std::cout << "Diff filename: " << filename_dsdxdy << std::endl;
         std::cout << "Total filename: " << filename_sigma << std::endl;
@@ -69,7 +70,8 @@ int main(int argc, char* argv[]){
           double enu = pow(10, logenu);
           std::cout << enu << std::endl;
           xs_obj.Set_Neutrino_Energy(enu*xs_obj.pc->GeV);
-          double sigma = xs_obj.total() / m2; // be careful of units!!!
+          double sigma = xs_obj.total(); // this is in eV^-2 if CC/NC, dimensionless if EM
+          if (IT == NC || IT == CC) sigma /= m2;
           outputfile_sigma << enu << "\t" << sigma << std::endl;
           for (double logx=-5.;logx<0.;logx+=0.025){
             double x = pow(10, logx);
@@ -79,7 +81,8 @@ int main(int argc, char* argv[]){
                 zz[0] = log(x);
                 zz[1] = log(y);
 
-                double dsigdxdy = xs_obj.KernelXS(zz) / m2;
+                double dsigdxdy = xs_obj.KernelXS(zz);
+                if (IT == NC || IT == CC) dsigdxdy /= m2; // same units as sigma
                 outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
             }
           }

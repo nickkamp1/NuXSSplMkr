@@ -235,19 +235,27 @@ if __name__ == "__main__":
     # inpaths = glob(os.path.join(inpath_base, 'M_*'))
     # only a specific mass
     inpaths = [os.path.join(inpath_base, 'M_0000000MeV'),
-               #os.path.join(inpath_base, 'M_0100MeV'),
-               #os.path.join(inpath_base, 'M_0000100MeV'),
-               #os.path.join(inpath_base, 'M_0000200MeV'),
-               #os.path.join(inpath_base, 'M_0000300MeV'),
-               #os.path.join(inpath_base, 'M_0000400MeV'),
-               #os.path.join(inpath_base, 'M_0000500MeV'),
-               #os.path.join(inpath_base, 'M_0000600MeV'),
-               #os.path.join(inpath_base, 'M_0000700MeV'),
-               #os.path.join(inpath_base, 'M_0000800MeV'),
-               #os.path.join(inpath_base, 'M_0000900MeV'),
-               #os.path.join(inpath_base, 'M_0001000MeV'),
-               #os.path.join(inpath_base, 'M_0001500MeV'),
-               #os.path.join(inpath_base, 'M_0002000MeV'),
+               os.path.join(inpath_base, 'M_0000100MeV'),
+            #    os.path.join(inpath_base, 'M_0000200MeV'),
+            #    os.path.join(inpath_base, 'M_0000300MeV'),
+            #    os.path.join(inpath_base, 'M_0000400MeV'),
+            #    os.path.join(inpath_base, 'M_0000500MeV'),
+            #    os.path.join(inpath_base, 'M_0000600MeV'),
+            #    os.path.join(inpath_base, 'M_0000700MeV'),
+            #    os.path.join(inpath_base, 'M_0000800MeV'),
+            #    os.path.join(inpath_base, 'M_0000900MeV'),
+            #    os.path.join(inpath_base, 'M_0001000MeV'),
+            #    os.path.join(inpath_base, 'M_0001100MeV'),
+            #    os.path.join(inpath_base, 'M_0001200MeV'),
+            #    os.path.join(inpath_base, 'M_0001300MeV'),
+            #    os.path.join(inpath_base, 'M_0001400MeV'),
+            #    os.path.join(inpath_base, 'M_0001500MeV'),
+            #    os.path.join(inpath_base, 'M_0001600MeV'),
+            #    os.path.join(inpath_base, 'M_0001700MeV'),
+            #    os.path.join(inpath_base, 'M_0001800MeV'),
+            #    os.path.join(inpath_base, 'M_0001900MeV'),
+            #    os.path.join(inpath_base, 'M_0002000MeV'),
+            #    os.path.join(inpath_base, 'M_0002500MeV'),
                #os.path.join(inpath_base, 'M_0003000MeV'),
                #os.path.join(inpath_base, 'M_0004000MeV'),
                #os.path.join(inpath_base, 'M_0005000MeV'),
@@ -312,27 +320,28 @@ if __name__ == "__main__":
         #             SplineFitMaker1D(infilepath, outname = filename + ".fits",
         #                     scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
-        for int_type in ["nc"]:
+        for int_type in ["em","nc"]:
             for pdf in pdf_list:
                 for neutype in neutrino_type:
 
                     # total
                     filename = "sigma-"+neutype+"-N-"+int_type+"-"+pdf
                     print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + "_m2.dat"
+                    infilepath = inpath + '/' + filename + "_v2.dat"
                     if not os.path.isfile(infilepath):continue
                     print('Infilepath: {}'.format(infilepath))
-                    SplineFitMaker1D(infilepath, outname = filename + "_m2.fits",
+                    SplineFitMaker1D(infilepath, outname = filename + "_v2.fits",
                             scale = 'log',prefix = outpath, N = 65, column = 1, oscale = 'log')
 
                     # differential
-                    filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
-                    print("processing: "+filename)
-                    infilepath = inpath + '/' + filename + "_m2.dat"
-                    if not os.path.isfile(infilepath):continue
-                    print('Infilepath: {}'.format(infilepath))
-                    SplineFitMaker3D(infilepath, outname = filename + "_m2.fits",
-                            scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log', smooth=1e-15)
+                    if "M_0000000MeV" in inpath:
+                        filename = "dsdxdy-"+neutype+"-N-"+int_type+"-"+pdf
+                        print("processing: "+filename)
+                        infilepath = inpath + '/' + filename + "_v2.dat"
+                        if not os.path.isfile(infilepath):continue
+                        print('Infilepath: {}'.format(infilepath))
+                        SplineFitMaker3D(infilepath, outname = filename + "_v2.fits",
+                                scale = 'log',prefix = outpath, N = 65, column = 3, oscale = 'log', smooth=1e-15)
 
 #     #### Start - Original code (carguelles) ####
 
