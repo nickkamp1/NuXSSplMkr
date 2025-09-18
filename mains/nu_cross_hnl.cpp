@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
   double m2 = SQ(pc->meter);
 
 
-  for (Current IT : {NC}) {
+  for (Current IT : {NC,EM}) {
     std::cout << "Interaction Type: " << IT << std::endl;
     xs_obj.Set_InteractionType(IT);
     for (NeutrinoType neutype : {neutrino,antineutrino}){
@@ -83,6 +83,8 @@ int main(int argc, char* argv[]){
 
                 double dsigdxdy = xs_obj.KernelXS(zz);
                 if (IT == NC || IT == CC) dsigdxdy /= m2; // same units as sigma
+                // NOW WE NEED TO REMOVE THE JACOBIAN
+                dsigdxdy /= (x*y); // convert from d/dlnx d/dlny to d/dx dy
                 outputfile_dsdxdy << enu << "\t"<< x <<  "\t" << y << "\t" << dsigdxdy << std::endl;
             }
           }
